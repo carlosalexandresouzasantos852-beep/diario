@@ -1,4 +1,5 @@
 const express = require('express');
+const ws = require('ws');
 const router  = express.Router();
 const { MercadoPagoConfig, Payment } = require('mercadopago');
 const { createClient } = require('@supabase/supabase-js');
@@ -14,7 +15,11 @@ if (!supabaseKey) {
   throw new Error('SUPABASE_SERVICE_ROLE_KEY não configurado no .env');
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  realtime: {
+    transport: ws
+  }
+});
 
 router.post('/', async (req, res) => {
   const { team, leader, members, reserves, slot, amount } = req.body;
