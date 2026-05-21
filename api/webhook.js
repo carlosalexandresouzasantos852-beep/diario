@@ -1,11 +1,17 @@
 const express = require('express');
+const ws = require('ws');
 const router  = express.Router();
 const { MercadoPagoConfig, Payment } = require('mercadopago');
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY,
+  {
+    realtime: {
+      transport: ws
+    }
+  }
 );
 
 // Mercado Pago calls this endpoint automatically when a payment status changes
