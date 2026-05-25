@@ -699,29 +699,32 @@ async function registerFree({team,leader,members,reserves,slot}) {
 }
 
 // ══════════════════════════════ PIX AUTOMÁTICO (Railway API) ══════
-const API_URL = 'https://xtreinoaura-production.up.railway.app';
+const API_URL = 'https://organizacaoauraxt.up.railway.app';
 
 async function initPixAuto({team,leader,members,reserves,slot}) {
   const btn=document.getElementById('btn-submit');
   btn.disabled=true; btn.textContent='GERANDO PIX...';
   try {
-    const res = await fetch(`${API_URL}/criar-pagamento`, {
+    const res = await fetch(`${API_URL}/api/create-payment`, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({team, leader, slot, amount: cfg.inscriptionValue, title: cfg.title})
+      body: JSON.stringify({team, leader, members, reserves, slot, amount: cfg.inscriptionValue})
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error||'Erro na API');
 
-    const pending = await db('payments','POST',{
-      payment_id: String(data.payment_id),
-      team_name:team, leader, members, reserves, slot, status:'pending'
-    });
-    const pendingRow = Array.isArray(pending)?pending[0]:pending;
-    payments.push(pendingRow); renderSlotsReg(); markRegistered(team);
-    pixData = {paymentId:String(data.payment_id), qrCode:data.qr_code, qrBase64:data.qr_code_base64, team, slot, dbId:pendingRow.id, leader, members, reserves, mode:'auto'};
+    // API já salva no Supabase — só atualiza cache local
+    const pendingRow = {
+      id: data.db_id,
+      payment_id: data.payment_id,
+      team_name: team, leader, members, reserves, slot, status:'pending'
+    };
+    payments.push(pendingRow);
+    renderSlotsReg();
+    markRegistered(team);
+    pixData = {paymentId:data.payment_id, qrCode:data.pix_code, qrBase64:data.pix_qr_b64, team, slot, dbId:data.db_id, leader, members, reserves, mode:'auto'};
     openPixModalAuto(data);
-    startPixPolling(String(data.payment_id), pendingRow.id, team, slot, leader, members, reserves);
+    startPixPolling(data.payment_id, data.db_id, team, slot, leader, members, reserves);
   } catch(e) { toast('Erro ao gerar Pix: '+e.message, true); }
   btn.disabled=false; updateHeroBadges();
 }
@@ -732,10 +735,10 @@ function openPixModalAuto(data) {
   document.getElementById('pix-confirm-btn').style.display = 'none';
   document.getElementById('pix-copy-btn').style.display = 'block';
   const qrDiv=document.getElementById('qrcode'); qrDiv.innerHTML='';
-  if (data.qr_code_base64) {
-    qrDiv.innerHTML=`<img src="data:image/png;base64,${data.qr_code_base64}" style="width:200px;height:200px;border-radius:6px">`;
-  } else if (data.qr_code) {
-    new QRCode(qrDiv,{text:data.qr_code,width:200,height:200,colorDark:'#000',colorLight:'#fff'});
+  if (data.pix_qr_b64) {
+    qrDiv.innerHTML=`<img src="data:image/png;base64,${data.pix_qr_b64}" style="width:200px;height:200px;border-radius:6px">`;
+  } else if (data.pix_code) {
+    new QRCode(qrDiv,{text:data.pix_code,width:200,height:200,colorDark:'#000',colorLight:'#fff'});
   }
   openModal('modal-pix');
 }
@@ -745,7 +748,7 @@ function startPixPolling(paymentId, dbId, team, slot, leader, members, reserves)
   pixPollInterval = setInterval(async()=>{
     if(++attempts>120){stopPixPolling();return;}
     try {
-      const res = await fetch(`${API_URL}/status-pagamento?id=${paymentId}`);
+      const res = await fetch(`${API_URL}/api/check?payment_id=${paymentId}`);
       const data = await res.json();
       if(data.status==='approved') {
         stopPixPolling();
