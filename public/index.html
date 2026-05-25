@@ -2,9 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>XTREINO AURA</title>
-
-<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campeonato</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -12,22 +11,31 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;font-size:16px;}
 h1,h2,h3{font-family:'Bebas Neue',sans-serif;letter-spacing:2px;}
-.view{display:none!important;}.view.active{display:block!important;}
+
+/* ── VIEWS: only .active shows ── */
+.view{display:none!important;}
+.view.active{display:block!important;}
+
+/* ── NAV ── */
 nav{background:var(--surface);border-bottom:2px solid var(--accent);display:flex;align-items:center;justify-content:space-between;padding:14px 32px;position:sticky;top:0;z-index:100;}
 .nav-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent);letter-spacing:3px;}
 .nav-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 16px;border-radius:4px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;transition:all .2s;}
 .nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── HERO ── */
 .reg-hero{border-bottom:1px solid var(--border);padding:70px 32px 50px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,#0a0a0f 0%,#12121a 50%,#0f0a1a 100%);min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity .4s;}
 .hero-overlay{position:absolute;inset:0;background:rgba(10,10,15,.62);display:none;}
 .hero-pattern{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(240,192,64,.03) 40px,rgba(240,192,64,.03) 41px);}
 .hero-content{position:relative;z-index:2;}
 .reg-hero h1{font-size:clamp(40px,8vw,80px);color:var(--accent);line-height:1;text-shadow:0 0 40px rgba(240,192,64,.4);}
 .reg-hero .sub{color:rgba(232,232,240,.8);font-size:14px;letter-spacing:3px;margin-top:10px;font-weight:600;}
 .hero-badges{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
-.hero-badge{background:rgba(10,10,15,.7);border:1px solid var(--border);border-radius:6px;padding:10px 22px;text-align:center;}
+.hero-badge{background:rgba(10,10,15,.7);border:1px solid var(--border);border-radius:6px;padding:10px 22px;display:flex;flex-direction:column;align-items:center;}
 .hero-badge .badge-val{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--accent);line-height:1;}
 .hero-badge .badge-key{font-size:10px;letter-spacing:2px;color:var(--muted);font-weight:700;margin-top:2px;}
+
+/* ── FORM ── */
 .reg-body{max-width:760px;margin:40px auto;padding:0 24px 60px;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;margin-bottom:24px;}
 .card-title{font-size:20px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
@@ -37,12 +45,14 @@ nav{background:var(--surface);border-bottom:2px solid var(--accent);display:flex
 @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
 .field{display:flex;flex-direction:column;gap:6px;}
 .field label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-.field label .req{color:var(--accent);}
-.field label .opt{color:var(--success);font-size:10px;margin-left:4px;}
-.field input,.field textarea,.field select{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:10px 14px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:500;outline:none;transition:border-color .2s;width:100%;}
-.field input:focus,.field textarea:focus{border-color:var(--accent);}
+.field label .req{color:var(--accent);margin-left:2px;}
+.field label .opt{color:var(--success);margin-left:4px;font-size:10px;}
+.field input,.field select,.field textarea{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:10px 14px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:500;outline:none;transition:border-color .2s;width:100%;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);}
 .field input::placeholder,.field textarea::placeholder{color:var(--muted);font-size:13px;}
 .field textarea{resize:vertical;min-height:80px;}
+
+/* ── SLOTS ── */
 .slots-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
 @media(max-width:500px){.slots-grid{grid-template-columns:repeat(3,1fr);}}
 .slot{border:2px solid var(--border);border-radius:6px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);user-select:none;}
@@ -54,6 +64,8 @@ nav{background:var(--surface);border-bottom:2px solid var(--accent);display:flex
 .slot.selected .slot-num,.slot.selected .slot-label{color:var(--accent);}
 .slot.taken{border-color:var(--danger);background:rgba(224,64,64,.08);cursor:not-allowed;opacity:.7;}
 .slot.taken .slot-num,.slot.taken .slot-label{color:var(--danger);}
+
+/* ── BTNS ── */
 .btn{background:var(--accent);color:var(--bg);border:none;border-radius:5px;padding:13px 32px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer;transition:all .2s;width:100%;}
 .btn:hover:not(:disabled){background:#ffd060;transform:translateY(-1px);}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
@@ -61,14 +73,22 @@ nav{background:var(--surface);border-bottom:2px solid var(--accent);display:flex
 .btn.secondary{background:var(--surface2);color:var(--text);font-size:14px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;padding:8px 16px;width:auto;}
 .btn.sm{font-size:13px;padding:7px 18px;width:auto;letter-spacing:1px;font-family:'Rajdhani',sans-serif;font-weight:700;}
 .btn.success-btn{background:var(--success);color:var(--bg);}
+
+/* ── TOAST ── */
 #toast{position:fixed;bottom:30px;right:30px;background:var(--success);color:var(--bg);padding:12px 22px;border-radius:6px;font-weight:700;font-size:14px;letter-spacing:1px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:9999;max-width:320px;}
-#toast.show{opacity:1;}#toast.err{background:var(--danger);color:#fff;}
+#toast.show{opacity:1;}
+#toast.err{background:var(--danger);color:#fff;}
+
+/* ── LOADING ── */
 .loading-overlay{position:fixed;inset:0;background:rgba(10,10,15,.88);z-index:5000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
 .loading-overlay.hidden{display:none!important;}
 .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-overlay p{color:var(--muted);font-size:13px;letter-spacing:2px;font-weight:600;}
+
+/* ── CLOSED VIEW ── */
 .closed-wrap{min-height:calc(100vh - 62px);display:flex;align-items:center;justify-content:center;padding:40px 24px;position:relative;overflow:hidden;background:linear-gradient(135deg,#0a0a0f 0%,#12121a 60%,#0f0a1a 100%);}
+.closed-wrap .hero-pattern{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(224,64,64,.02) 40px,rgba(224,64,64,.02) 41px);}
 .closed-content{position:relative;z-index:2;max-width:560px;text-align:center;}
 .closed-icon{font-size:72px;margin-bottom:16px;animation:float 3s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
@@ -82,6 +102,8 @@ nav{background:var(--surface);border-bottom:2px solid var(--accent);display:flex
 .timer-block{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 18px;min-width:70px;}
 .timer-block .tv{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--accent);line-height:1;}
 .timer-block .tk{font-size:10px;letter-spacing:2px;color:var(--muted);font-weight:700;}
+
+/* ── ADMIN ── */
 .admin-topbar{background:var(--surface);border-bottom:2px solid var(--accent2);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 .admin-topbar h2{font-size:22px;color:var(--accent2);}
 .admin-body{max-width:1060px;margin:32px auto;padding:0 24px 60px;}
@@ -91,6 +113,7 @@ nav{background:var(--surface);border-bottom:2px solid var(--accent);display:flex
 .stat-box .val{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--accent);line-height:1;}
 .stat-box .key{font-size:11px;letter-spacing:2px;color:var(--muted);font-weight:700;margin-top:4px;}
 .slots-admin{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;}
+@media(max-width:500px){.slots-admin{grid-template-columns:repeat(3,1fr);}}
 .slot-admin{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 8px;text-align:center;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .slot-admin .num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--muted);}
 .slot-admin .sname{font-size:11px;font-weight:700;color:var(--accent);margin-top:3px;line-height:1.2;word-break:break-word;}
@@ -98,6 +121,8 @@ nav{background:var(--surface);border-bottom:2px solid var(--accent);display:flex
 .slot-admin.filled .num{color:var(--accent);}
 .slot-admin.pending-slot{border-color:#f0a020;background:rgba(240,160,32,.07);}
 .slot-admin.pending-slot .num,.slot-admin.pending-slot .sname{color:#f0a020;}
+
+/* ── TABLE ── */
 table{width:100%;border-collapse:collapse;}
 thead tr{background:var(--surface2);}
 th{padding:10px 14px;text-align:left;font-size:11px;letter-spacing:2px;color:var(--muted);font-weight:700;}
@@ -107,6 +132,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .tag.leader{border-color:var(--accent);color:var(--accent);}
 .tag.reserve{border-color:var(--muted);color:var(--muted);opacity:.7;}
 .badge-paid{background:rgba(64,192,128,.15);border:1px solid var(--success);color:var(--success);border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:1px;}
+.badge-pending{background:rgba(240,160,32,.15);border:1px solid #f0a020;color:#f0a020;border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:1px;}
+
+/* ── CONFIG SECTIONS ── */
 .section-title{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted);letter-spacing:3px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
 .config-section{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:18px;}
 .config-section-title{font-family:'Bebas Neue',sans-serif;font-size:17px;color:var(--accent);letter-spacing:2px;margin-bottom:16px;}
@@ -123,11 +151,15 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .status-badge-closed{background:rgba(224,64,64,.15);border:1px solid var(--danger);color:var(--danger);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;letter-spacing:1px;display:inline-block;}
 .img-preview{width:100%;height:120px;border-radius:6px;object-fit:cover;margin-top:8px;display:none;border:1px solid var(--border);}
 .img-preview.show{display:block;}
+
+/* ── MODALS ── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
 .modal{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:8px;padding:28px;min-width:320px;max-width:480px;width:90%;max-height:90vh;overflow-y:auto;}
 .modal h3{font-size:20px;color:var(--accent);margin-bottom:16px;}
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+
+/* ── PIX ── */
 .pix-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;margin:16px 0;}
 #qrcode{display:flex;justify-content:center;margin-bottom:12px;}
 #qrcode canvas,#qrcode img{border-radius:6px;}
@@ -137,15 +169,18 @@ tr:hover td{background:rgba(255,255,255,.02);}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
 .pix-copy{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:8px 16px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;width:100%;transition:border-color .2s;}
 .pix-copy:hover{border-color:var(--accent);}
+
+/* ── ALREADY REGISTERED NOTICE ── */
 .reg-notice{background:rgba(64,192,128,.1);border:1px solid var(--success);border-radius:8px;padding:18px 22px;margin-bottom:20px;display:none;align-items:center;gap:14px;}
 .reg-notice.show{display:flex;}
 </style>
 </head>
 <body>
+
 <div id="toast"></div>
 <div class="loading-overlay" id="loading"><div class="spinner"></div><p>CARREGANDO...</p></div>
 
-<!-- ── VIEW: REGISTRO ── -->
+<!-- ══════════════ VIEW: REGISTRO (inscrições abertas) ══════════════ -->
 <div id="view-reg" class="view">
   <nav>
     <div class="nav-title" id="reg-nav-title">CAMPEONATO</div>
@@ -197,14 +232,14 @@ tr:hover td{background:rgba(255,255,255,.02);}
     </div>
     <div class="card">
       <div class="card-title"><div class="icon">3</div> ESCOLHA SEU SLOT</div>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Selecione um slot disponível.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Selecione um slot disponível. Slots ocupados não podem ser escolhidos.</p>
       <div class="slots-grid" id="slots-reg"></div>
     </div>
     <button class="btn" id="btn-submit" onclick="submitRegistration()">CONFIRMAR INSCRIÇÃO</button>
   </div>
 </div>
 
-<!-- ── VIEW: FECHADO ── -->
+<!-- ══════════════ VIEW: INSCRIÇÕES FECHADAS ══════════════ -->
 <div id="view-closed" class="view">
   <nav>
     <div class="nav-title" id="closed-nav-title">CAMPEONATO</div>
@@ -213,11 +248,14 @@ tr:hover td{background:rgba(255,255,255,.02);}
   <div class="closed-wrap">
     <div class="hero-bg" id="closed-hero-bg"></div>
     <div class="hero-overlay" id="closed-hero-overlay"></div>
+    <div class="hero-pattern"></div>
     <div class="closed-content">
       <div class="closed-icon">🔒</div>
       <div class="closed-title-big">INSCRIÇÕES ENCERRADAS</div>
       <div class="closed-subtitle" id="closed-champ-sub">CAMPEONATO</div>
-      <div class="closed-msg-box"><div class="closed-msg" id="closed-msg-display"></div></div>
+      <div class="closed-msg-box">
+        <div class="closed-msg" id="closed-msg-display">As inscrições estão encerradas no momento.</div>
+      </div>
       <div class="closed-timer" id="closed-timer" style="display:none">
         <div class="closed-timer-label">INSCRIÇÕES ABREM EM</div>
         <div class="closed-timer-row">
@@ -230,7 +268,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
-<!-- ── VIEW: ADMIN ── -->
+<!-- ══════════════ VIEW: ADMIN ══════════════ -->
 <div id="view-admin" class="view">
   <nav>
     <div class="nav-title" id="admin-nav-title">CAMPEONATO</div>
@@ -238,39 +276,64 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </nav>
   <div class="admin-topbar">
     <h2>⚙ PAINEL ADMINISTRATIVO &nbsp;<span id="admin-status-badge" class="status-badge-open">● ABERTO</span></h2>
-    <button class="btn sm secondary" onclick="openModal('modal-pw-bg')">🔑 Alterar Senha</button>
+    <button class="btn sm secondary" onclick="showView('modal-pw-bg')">🔑 Alterar Senha</button>
   </div>
   <div class="admin-body">
+
+    <!-- STATS -->
     <div class="stats-row">
       <div class="stat-box"><div class="val" id="stat-teams">0</div><div class="key">EQUIPES</div></div>
       <div class="stat-box"><div class="val" id="stat-slots">12</div><div class="key">SLOTS LIVRES</div></div>
       <div class="stat-box"><div class="val" id="stat-members">0</div><div class="key">MEMBROS</div></div>
       <div class="stat-box"><div class="val" id="stat-revenue">—</div><div class="key">ARRECADADO</div></div>
     </div>
+
+    <!-- CONFIG: Título e Imagem -->
     <div class="section-title">CONFIGURAÇÕES</div>
     <div class="config-section">
-      <div class="config-section-title">🏆 TÍTULO</div>
-      <div class="field"><label>Nome do Campeonato</label><input id="cfg-title" type="text" placeholder="Nome do campeonato"></div>
+      <div class="config-section-title">🏆 TÍTULO DO CAMPEONATO</div>
+      <div class="form-grid single">
+        <div class="field"><label>Nome</label><input id="cfg-title" type="text" placeholder="Nome do campeonato"></div>
+      </div>
     </div>
     <div class="config-section">
       <div class="config-section-title">🖼 IMAGEM DE FUNDO DO BANNER</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Cole a URL de uma imagem para usar como fundo do banner principal.</p>
       <div class="field"><label>URL da Imagem</label><input id="cfg-hero-img" type="text" placeholder="https://exemplo.com/imagem.jpg" oninput="previewHeroImage()"></div>
       <img id="img-preview" class="img-preview" alt="Preview">
     </div>
     <div class="config-section">
-      <div class="config-section-title">⚙ SISTEMA</div>
+      <div class="config-section-title">⚙ SISTEMA DE CAMPEONATO</div>
       <div class="toggle-row">
         <div class="toggle-option" id="opt-free" onclick="setMode('free')">🎮 GRÁTIS</div>
-        <div class="toggle-option" id="opt-paid" onclick="setMode('paid')">💰 PAGO (PIX)</div>
+        <div class="toggle-option" id="opt-auto" onclick="setMode('auto')">⚡ PIX AUTOMÁTICO</div>
+        <div class="toggle-option" id="opt-manual" onclick="setMode('manual')">📱 PIX MANUAL</div>
       </div>
-      <div class="paid-extra" id="paid-config" style="display:none">
+      <!-- Pix Automático config -->
+      <div class="paid-extra" id="paid-auto-config" style="display:none">
         <div class="form-grid">
           <div class="field"><label>Valor da Inscrição (R$)</label><input id="cfg-inscription" type="number" step="0.01" min="0" placeholder="Ex: 25.00"></div>
           <div class="field"><label>Valor da Premiação (R$)</label><input id="cfg-prize" type="number" step="0.01" min="0" placeholder="Ex: 200.00"></div>
         </div>
       </div>
+      <!-- Pix Manual config -->
+      <div class="paid-extra" id="paid-manual-config" style="display:none">
+        <div class="form-grid single" style="margin-bottom:12px">
+          <div class="field">
+            <label>URL da imagem do QR Code Pix</label>
+            <input id="cfg-manual-qr" type="text" placeholder="https://exemplo.com/qrcode.png" oninput="previewManualQR()">
+          </div>
+        </div>
+        <img id="manual-qr-preview" class="img-preview" alt="QR Code Preview">
+        <div class="form-grid" style="margin-top:12px">
+          <div class="field"><label>Valor da Inscrição (R$)</label><input id="cfg-inscription-manual" type="number" step="0.01" min="0" placeholder="Ex: 25.00"></div>
+          <div class="field"><label>Valor da Premiação (R$)</label><input id="cfg-prize-manual" type="number" step="0.01" min="0" placeholder="Ex: 200.00"></div>
+        </div>
+      </div>
     </div>
     <button class="btn" style="max-width:320px;margin-bottom:32px" onclick="saveAllConfig()">💾 SALVAR CONFIGURAÇÕES</button>
+
+    <!-- CONFIG: Controle de Inscrições -->
     <div class="section-title">CONTROLE DE INSCRIÇÕES</div>
     <div class="config-section">
       <div class="config-section-title">🚦 STATUS</div>
@@ -279,7 +342,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="toggle-option" id="opt-closed" onclick="setRegStatus('closed')">🔒 FECHADAS</div>
       </div>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-        <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Horários automáticos (opcional):</p>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Horários automáticos (opcional — deixe em branco para controle manual):</p>
         <div class="form-grid">
           <div class="field"><label>Abertura automática</label><input id="cfg-open-time" type="datetime-local"></div>
           <div class="field"><label>Fechamento automático</label><input id="cfg-close-time" type="datetime-local"></div>
@@ -288,15 +351,21 @@ tr:hover td{background:rgba(255,255,255,.02);}
     </div>
     <div class="config-section">
       <div class="config-section-title">📝 MENSAGEM QUANDO FECHADO</div>
-      <div class="field"><textarea id="cfg-closed-msg" placeholder="Mensagem para quando as inscrições estiverem fechadas..."></textarea></div>
+      <div class="field"><textarea id="cfg-closed-msg" placeholder="Ex: As inscrições estão encerradas. Próximo treino no domingo, fique ligado!"></textarea></div>
     </div>
-    <button class="btn success-btn" style="max-width:360px;margin-bottom:36px" onclick="saveRegControl()">🚦 SALVAR CONTROLE</button>
+    <button class="btn success-btn" style="max-width:360px;margin-bottom:36px" onclick="saveRegControl()">🚦 SALVAR CONTROLE DE INSCRIÇÕES</button>
+
+    <!-- SLOT MAP -->
     <div class="section-title">MAPA DE SLOTS</div>
     <div class="slots-admin" id="slots-admin-map"></div>
+
+    <!-- PENDING -->
     <div id="pending-section" style="display:none">
-      <div class="section-title" style="color:#f0a020;margin-top:8px">⏳ AGUARDANDO PAGAMENTO</div>
+      <div class="section-title" style="color:#f0a020">⏳ AGUARDANDO PAGAMENTO</div>
       <div class="card" style="padding:0;overflow:hidden"><div id="pending-table-wrap"></div></div>
     </div>
+
+    <!-- TEAMS -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:32px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">
       <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted);letter-spacing:3px">EQUIPES INSCRITAS</div>
       <button class="btn danger" style="font-size:12px;padding:6px 14px" onclick="openModal('modal-remove-all')">🗑 REMOVER TODAS</button>
@@ -305,53 +374,78 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
-<!-- MODAIS -->
+<!-- ══════════════ MODALS ══════════════ -->
 <div class="modal-bg" id="modal-login">
-  <div class="modal"><h3>🔒 ACESSO ADMIN</h3>
+  <div class="modal">
+    <h3>🔒 ACESSO ADMIN</h3>
     <div class="field"><label>Senha</label><input id="login-pw" type="password" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div class="modal-actions"><button class="btn secondary" onclick="closeModal('modal-login')">Cancelar</button><button class="btn sm" onclick="doLogin()">ENTRAR</button></div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal('modal-login')">Cancelar</button>
+      <button class="btn sm" onclick="doLogin()">ENTRAR</button>
+    </div>
   </div>
 </div>
+
 <div class="modal-bg" id="modal-pw-bg">
-  <div class="modal"><h3>🔑 ALTERAR SENHA</h3>
+  <div class="modal">
+    <h3>🔑 ALTERAR SENHA</h3>
     <div class="field" style="margin-bottom:12px"><label>Senha Atual</label><input id="pw-current" type="password" placeholder="Senha atual"></div>
     <div class="field" style="margin-bottom:12px"><label>Nova Senha</label><input id="pw-new" type="password" placeholder="Nova senha"></div>
     <div class="field"><label>Confirmar</label><input id="pw-confirm" type="password" placeholder="Repita a nova senha"></div>
-    <div class="modal-actions"><button class="btn secondary" onclick="closeModal('modal-pw-bg')">Cancelar</button><button class="btn sm" onclick="savePassword()">SALVAR</button></div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal('modal-pw-bg')">Cancelar</button>
+      <button class="btn sm" onclick="savePassword()">SALVAR</button>
+    </div>
   </div>
 </div>
+
 <div class="modal-bg" id="modal-delete">
-  <div class="modal"><h3>⚠ REMOVER EQUIPE</h3>
+  <div class="modal">
+    <h3>⚠ REMOVER EQUIPE</h3>
     <p style="font-size:14px;color:var(--muted);margin-bottom:8px">Tem certeza que deseja remover <strong id="delete-team-name" style="color:var(--text)"></strong>?</p>
     <p style="font-size:12px;color:var(--danger)">O slot será liberado e a pessoa poderá se inscrever novamente.</p>
-    <div class="modal-actions"><button class="btn secondary" onclick="closeModal('modal-delete')">Cancelar</button><button class="btn danger" onclick="confirmDelete()">REMOVER</button></div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal('modal-delete')">Cancelar</button>
+      <button class="btn danger" onclick="confirmDelete()">REMOVER</button>
+    </div>
   </div>
 </div>
+
 <div class="modal-bg" id="modal-remove-all">
-  <div class="modal"><h3>⚠ REMOVER TODAS AS EQUIPES</h3>
+  <div class="modal">
+    <h3>⚠ REMOVER TODAS AS EQUIPES</h3>
     <p style="font-size:14px;color:var(--muted);margin-bottom:8px">Tem certeza que deseja remover <strong style="color:var(--danger)">TODAS</strong> as equipes?</p>
-    <p style="font-size:12px;color:var(--danger)">Todos os slots serão liberados.</p>
-    <div class="modal-actions"><button class="btn secondary" onclick="closeModal('modal-remove-all')">Cancelar</button><button class="btn danger" onclick="confirmRemoveAll()">REMOVER TODAS</button></div>
+    <p style="font-size:12px;color:var(--danger)">Todos os slots serão liberados e todas as pessoas poderão se inscrever novamente.</p>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal('modal-remove-all')">Cancelar</button>
+      <button class="btn danger" onclick="confirmRemoveAll()">REMOVER TODAS</button>
+    </div>
   </div>
 </div>
+
 <div class="modal-bg" id="modal-pix">
-  <div class="modal" style="max-width:420px"><h3>💳 PAGAMENTO VIA PIX</h3>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Escaneie o QR Code ou copie o código Pix.</p>
+  <div class="modal" style="max-width:420px">
+    <h3>💳 PAGAMENTO VIA PIX</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Escaneie o QR Code ou copie o código para pagar via Pix. Após o pagamento, aguarde a confirmação.</p>
     <div class="pix-box">
       <div id="qrcode"></div>
       <div class="pix-amount" id="pix-amount">R$ 0,00</div>
       <div class="pix-waiting"><div class="pulse"></div><span id="pix-status-text">AGUARDANDO PAGAMENTO...</span></div>
-      <button class="pix-copy" onclick="copyPixCode()">📋 COPIAR CÓDIGO PIX</button>
+      <button class="pix-copy" id="pix-copy-btn" onclick="copyPixCode()">📋 COPIAR CÓDIGO PIX</button>
+      <button class="btn success-btn" id="pix-confirm-btn" style="display:none;margin-top:10px;font-size:15px" onclick="userConfirmManualPayment()">✅ CONFIRMAR PAGAMENTO</button>
     </div>
-    <p style="font-size:11px;color:var(--muted);text-align:center">A inscrição será confirmada automaticamente após o pagamento.</p>
-    <div class="modal-actions" style="justify-content:center"><button class="btn secondary" onclick="cancelPix()">Cancelar</button></div>
+    <p style="font-size:11px;color:var(--muted);text-align:center">Após pagar, aguarde a confirmação do administrador.</p>
+    <div class="modal-actions" style="justify-content:center">
+      <button class="btn secondary" onclick="cancelPix()">Cancelar</button>
+    </div>
   </div>
 </div>
+
 <div class="modal-bg" id="modal-pix-ok">
   <div class="modal" style="text-align:center">
     <div style="font-size:60px;margin-bottom:12px">✅</div>
     <h3 style="color:var(--success);font-size:28px">PAGAMENTO CONFIRMADO!</h3>
-    <p style="color:var(--muted);margin-top:8px;font-size:15px">Inscrição realizada com sucesso!</p>
+    <p style="color:var(--muted);margin-top:8px;font-size:15px">Sua inscrição foi realizada com sucesso!</p>
     <p style="color:var(--text);margin-top:4px;font-size:14px">Equipe: <strong id="confirmed-team-name"></strong></p>
     <p style="color:var(--text);font-size:14px">Slot: <strong id="confirmed-slot"></strong></p>
     <div class="modal-actions" style="justify-content:center;margin-top:24px">
@@ -361,267 +455,655 @@ tr:hover td{background:rgba(255,255,255,.02);}
 </div>
 
 <script>
-// ══ SUPABASE ══
+// ══════════════════════════════ SUPABASE ══════
 const SB_URL = 'https://ddlskzfvwtaigvmthqvv.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbHNremZ2d3RhaWd2bXRocXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDQwMDMsImV4cCI6MjA5NDYyMDAwM30.vlYich0VOmtZCxKyrY2d1ftorjofBeKgc0uFKJo4dO0';
-const SBH = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':'return=representation'};
-async function db(path,method='GET',body=null,extra={}) {
-  const r=await fetch(`${SB_URL}/rest/v1/${path}`,{method,headers:{...SBH,...extra},body:body?JSON.stringify(body):undefined});
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||r.statusText);}
-  return r.status===204?null:r.json();
+const H = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':'return=representation'};
+
+async function db(path, method='GET', body=null, extra={}) {
+  const res = await fetch(`${SB_URL}/rest/v1/${path}`, {
+    method, headers:{...H,...extra}, body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e.message||res.statusText); }
+  return res.status===204 ? null : res.json();
 }
 
-// ══ STATE ══
-let cfg={title:'CAMPEONATO',adminPassword:'1234',mode:'free',inscriptionValue:0,prizeValue:0,heroImage:'',regOpen:true,openTime:'',closeTime:'',closedMsg:'As inscrições estão encerradas no momento.'};
-let teams=[],payments=[],selectedSlot=null,deleteTargetId=null,pixData=null,pixPollInterval=null,regTimerInterval=null;
+// ══════════════════════════════ STATE ══════
+let cfg = {
+  title:'CAMPEONATO', adminPassword:'1234',
+  mpToken:'APP_USR-4766650062661738-051800-8f19c51414cba06ebb169062fd8ea7e9-1267177292',
+  mode:'free', inscriptionValue:0, prizeValue:0, heroImage:'', manualQrUrl:'',
+  regOpen:true, openTime:'', closeTime:'',
+  closedMsg:'As inscrições estão encerradas no momento. Fique de olho nas nossas redes sociais para saber quando abriremos novamente!'
+};
+let teams=[], payments=[], selectedSlot=null, deleteTargetId=null;
+let pixData=null, pixPollInterval=null, regTimerInterval=null;
 
-// ══ INIT ══
+// ══════════════════════════════ INIT ══════
 async function init() {
   showLoading(true);
   try {
-    const [cfgRows,teamsData,paymentsData]=await Promise.all([
+    const [cfgRows, teamsData, paymentsData] = await Promise.all([
       db('config?select=key,value'),
       db('teams?select=*&order=slot.asc'),
       db('payments?select=*&order=created_at.desc').catch(()=>[])
     ]);
     parseConfig(cfgRows||[]);
-    teams=teamsData||[]; payments=paymentsData||[];
+    teams = teamsData||[];
+    payments = paymentsData||[];
     routeView();
-  } catch(e){toast('Erro ao conectar: '+e.message,true);goReg();}
+  } catch(e) {
+    toast('Erro ao conectar: '+e.message, true);
+    goReg();
+  }
   showLoading(false);
 }
 
-function parseConfig(rows){
-  rows.forEach(r=>{
-    if(r.key==='title') cfg.title=r.value;
-    if(r.key==='admin_password') cfg.adminPassword=r.value;
-    if(r.key==='mode') cfg.mode=r.value;
-    if(r.key==='inscription_value') cfg.inscriptionValue=parseFloat(r.value)||0;
-    if(r.key==='prize_value') cfg.prizeValue=parseFloat(r.value)||0;
-    if(r.key==='hero_image') cfg.heroImage=r.value;
-    if(r.key==='reg_open') cfg.regOpen=r.value==='true';
-    if(r.key==='reg_open_time') cfg.openTime=r.value||'';
-    if(r.key==='reg_close_time') cfg.closeTime=r.value||'';
-    if(r.key==='reg_closed_msg') cfg.closedMsg=r.value||cfg.closedMsg;
+function parseConfig(rows) {
+  rows.forEach(r => {
+    if (r.key==='title') cfg.title=r.value;
+    if (r.key==='admin_password') cfg.adminPassword=r.value;
+    if (r.key==='mp_token') cfg.mpToken=r.value;
+    if (r.key==='mode') cfg.mode=r.value;
+    if (r.key==='inscription_value') cfg.inscriptionValue=parseFloat(r.value)||0;
+    if (r.key==='prize_value') cfg.prizeValue=parseFloat(r.value)||0;
+    if (r.key==='hero_image') cfg.heroImage=r.value;
+    if (r.key==='manual_qr_url') cfg.manualQrUrl=r.value||'';
+    if (r.key==='reg_open') cfg.regOpen=r.value==='true';
+    if (r.key==='reg_open_time') cfg.openTime=r.value||'';
+    if (r.key==='reg_close_time') cfg.closeTime=r.value||'';
+    if (r.key==='reg_closed_msg') cfg.closedMsg=r.value||cfg.closedMsg;
   });
 }
 
-function routeView(){
-  const now=new Date();
-  if(cfg.openTime&&now>=new Date(cfg.openTime)&&(!cfg.closeTime||now<new Date(cfg.closeTime))) cfg.regOpen=true;
-  if(cfg.closeTime&&now>=new Date(cfg.closeTime)) cfg.regOpen=false;
-  cfg.regOpen ? goReg() : goClosed();
+// ══════════════════════════════ ROUTING ══════
+function routeView() {
+  // Compute effective open/closed status from times
+  const now = new Date();
+  if (cfg.openTime && now >= new Date(cfg.openTime) && (!cfg.closeTime || now < new Date(cfg.closeTime))) cfg.regOpen=true;
+  if (cfg.closeTime && now >= new Date(cfg.closeTime)) cfg.regOpen=false;
+
+  if (cfg.regOpen) goReg();
+  else goClosed();
 }
 
-function activateView(id){document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function goReg() {
+  applyTitles();
+  applyHero();
+  renderSlotsReg();
+  checkDeviceLock();
+  updateHeroBadges();
+  activateView('view-reg');
+}
 
-function goReg(){applyTitles();applyHero();renderSlotsReg();checkDeviceLock();updateHeroBadges();activateView('view-reg');}
-function goClosed(){
-  applyTitles();applyHero();
-  document.getElementById('closed-champ-sub').textContent=cfg.title;
-  document.getElementById('closed-msg-display').textContent=cfg.closedMsg;
-  if(regTimerInterval){clearInterval(regTimerInterval);regTimerInterval=null;}
-  const timerEl=document.getElementById('closed-timer');
-  if(cfg.openTime&&new Date(cfg.openTime)>new Date()){timerEl.style.display='block';startCountdown(new Date(cfg.openTime));}
-  else timerEl.style.display='none';
+function goClosed() {
+  applyTitles();
+  applyHero();
+  document.getElementById('closed-champ-sub').textContent = cfg.title;
+  document.getElementById('closed-msg-display').textContent = cfg.closedMsg;
+  // Countdown
+  if (regTimerInterval) { clearInterval(regTimerInterval); regTimerInterval=null; }
+  const timerEl = document.getElementById('closed-timer');
+  if (cfg.openTime && new Date(cfg.openTime) > new Date()) {
+    timerEl.style.display='block';
+    startCountdown(new Date(cfg.openTime));
+  } else {
+    timerEl.style.display='none';
+  }
   activateView('view-closed');
 }
-function logout(){routeView();}
 
-function applyTitles(){
-  ['reg-nav-title','reg-hero-title','closed-nav-title','closed-champ-sub','admin-nav-title'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=cfg.title;});
-  document.title=cfg.title;
+function logout() {
+  routeView();
 }
-function applyHero(){
-  [['reg-hero-bg','reg-hero-overlay'],['closed-hero-bg','closed-hero-overlay']].forEach(([bgId,ovId])=>{
-    const bg=document.getElementById(bgId),ov=document.getElementById(ovId);
-    if(!bg) return;
-    if(cfg.heroImage){bg.style.backgroundImage=`url('${cfg.heroImage}')`;bg.style.opacity='1';}
-    else{bg.style.backgroundImage='';bg.style.opacity='0';}
-    if(ov) ov.style.display=cfg.heroImage?'block':'none';
+
+// ══════════════════════════════ VIEW SWITCHER ══════
+// This is the single source of truth — only ONE view is ever active
+function activateView(id) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════════ APPLY TITLES & HERO ══════
+function applyTitles() {
+  ['reg-nav-title','reg-hero-title','closed-nav-title','closed-champ-sub','admin-nav-title'].forEach(id => {
+    const el=document.getElementById(id); if(el) el.textContent=cfg.title;
+  });
+  document.title = cfg.title;
+}
+
+function applyHero() {
+  // Registration view hero
+  const regBg=document.getElementById('reg-hero-bg');
+  const regOv=document.getElementById('reg-hero-overlay');
+  // Closed view hero
+  const clBg=document.getElementById('closed-hero-bg');
+  const clOv=document.getElementById('closed-hero-overlay');
+  [regBg, clBg].forEach(el => {
+    if (!el) return;
+    if (cfg.heroImage) { el.style.backgroundImage=`url('${cfg.heroImage}')`;el.style.opacity='1'; }
+    else { el.style.backgroundImage=''; el.style.opacity='0'; }
+  });
+  [regOv, clOv].forEach(el => {
+    if (!el) return;
+    el.style.display = cfg.heroImage ? 'block' : 'none';
   });
 }
-function updateHeroBadges(){
-  const badges=document.getElementById('hero-badges'),btn=document.getElementById('btn-submit');
-  if(cfg.mode==='paid'){badges.style.display='flex';document.getElementById('badge-inscription').textContent=fmtMoney(cfg.inscriptionValue);document.getElementById('badge-prize').textContent=fmtMoney(cfg.prizeValue);if(btn&&!btn.disabled)btn.textContent=`INSCREVER E PAGAR ${fmtMoney(cfg.inscriptionValue)}`;}
-  else{badges.style.display='none';if(btn&&!btn.disabled)btn.textContent='CONFIRMAR INSCRIÇÃO';}
+
+function updateHeroBadges() {
+  const badges=document.getElementById('hero-badges');
+  const btn=document.getElementById('btn-submit');
+  const isPaid = cfg.mode==='auto' || cfg.mode==='manual';
+  if (isPaid) {
+    badges.style.display='flex';
+    document.getElementById('badge-inscription').textContent=fmtMoney(cfg.inscriptionValue);
+    document.getElementById('badge-prize').textContent=fmtMoney(cfg.prizeValue);
+    if (btn && !btn.disabled) btn.textContent=`INSCREVER E PAGAR ${fmtMoney(cfg.inscriptionValue)}`;
+  } else {
+    badges.style.display='none';
+    if (btn && !btn.disabled) btn.textContent='CONFIRMAR INSCRIÇÃO';
+  }
 }
 
-function startCountdown(target){
-  function tick(){const diff=target-new Date();if(diff<=0){clearInterval(regTimerInterval);routeView();return;}const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);document.getElementById('t-h').textContent=String(h).padStart(2,'0');document.getElementById('t-m').textContent=String(m).padStart(2,'0');document.getElementById('t-s').textContent=String(s).padStart(2,'0');}
-  tick();regTimerInterval=setInterval(tick,1000);
+// ══════════════════════════════ COUNTDOWN ══════
+function startCountdown(target) {
+  function tick() {
+    const diff = target - new Date();
+    if (diff<=0) { clearInterval(regTimerInterval); routeView(); return; }
+    const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+    document.getElementById('t-h').textContent=String(h).padStart(2,'0');
+    document.getElementById('t-m').textContent=String(m).padStart(2,'0');
+    document.getElementById('t-s').textContent=String(s).padStart(2,'0');
+  }
+  tick();
+  regTimerInterval = setInterval(tick,1000);
 }
 
-// ══ DEVICE LOCK ══
-function hasRegistered(){const raw=localStorage.getItem('champ_reg_v2');if(!raw)return false;try{const{teamName}=JSON.parse(raw);if(!teams.some(t=>t.name===teamName)){localStorage.removeItem('champ_reg_v2');return false;}return true;}catch{localStorage.removeItem('champ_reg_v2');return false;}}
-function markRegistered(teamName){localStorage.setItem('champ_reg_v2',JSON.stringify({teamName,ts:Date.now()}));}
-function checkDeviceLock(){
-  const locked=hasRegistered(),notice=document.getElementById('already-registered-notice'),btn=document.getElementById('btn-submit');
-  if(locked){notice.classList.add('show');if(btn){btn.disabled=true;btn.style.opacity='0.4';btn.textContent='✅ INSCRIÇÃO JÁ REALIZADA';}document.querySelectorAll('#view-reg input').forEach(el=>el.disabled=true);}
-  else{notice.classList.remove('show');if(btn){btn.disabled=false;btn.style.opacity='1';}document.querySelectorAll('#view-reg input').forEach(el=>el.disabled=false);updateHeroBadges();}
+// ══════════════════════════════ DEVICE LOCK ══════
+function hasRegistered() {
+  const raw=localStorage.getItem('champ_reg_v2'); if(!raw) return false;
+  try {
+    const {teamName}=JSON.parse(raw);
+    if (!teams.some(t=>t.name===teamName)) { localStorage.removeItem('champ_reg_v2'); return false; }
+    return true;
+  } catch { localStorage.removeItem('champ_reg_v2'); return false; }
+}
+function markRegistered(teamName) { localStorage.setItem('champ_reg_v2',JSON.stringify({teamName,ts:Date.now()})); }
+
+function checkDeviceLock() {
+  const locked=hasRegistered();
+  const notice=document.getElementById('already-registered-notice');
+  const btn=document.getElementById('btn-submit');
+  if (locked) {
+    notice.classList.add('show');
+    if (btn) { btn.disabled=true; btn.style.opacity='0.4'; btn.textContent='✅ INSCRIÇÃO JÁ REALIZADA'; }
+    document.querySelectorAll('#view-reg input').forEach(el=>el.disabled=true);
+    document.querySelectorAll('#slots-reg .slot:not(.taken)').forEach(el=>{el.onclick=null;el.style.cursor='default';});
+  } else {
+    notice.classList.remove('show');
+    if (btn) { btn.disabled=false; btn.style.opacity='1'; }
+    document.querySelectorAll('#view-reg input').forEach(el=>el.disabled=false);
+    updateHeroBadges();
+  }
 }
 
-// ══ SLOTS ══
-function takenSlots(){return [...new Set([...teams.map(t=>t.slot),...payments.filter(p=>p.status==='pending').map(p=>p.slot)])];}
-function renderSlotsReg(){
-  const taken=takenSlots(),confirmed=teams.map(t=>t.slot),grid=document.getElementById('slots-reg');grid.innerHTML='';
-  for(let i=1;i<=12;i++){const isTaken=taken.includes(i),isPending=!confirmed.includes(i)&&isTaken,isSel=selectedSlot===i;const div=document.createElement('div');div.className='slot'+(isTaken?' taken':isSel?' selected':'');const lbl=isTaken?(isPending?'PENDENTE':'OCUPADO'):isSel?'SELECIONADO':'LIVRE';div.innerHTML=`<div class="slot-num">${String(i).padStart(2,'0')}</div><div class="slot-label">${lbl}</div>`;if(!isTaken)div.onclick=()=>{selectedSlot=i;renderSlotsReg();};grid.appendChild(div);}
+// ══════════════════════════════ SLOTS ══════
+function takenSlots() {
+  const c=teams.map(t=>t.slot);
+  const p=payments.filter(p=>p.status==='pending').map(p=>p.slot);
+  return [...new Set([...c,...p])];
 }
 
-// ══ SUBMIT ══
-async function submitRegistration(){
-  if(hasRegistered())return toast('Você já realizou uma inscrição neste dispositivo.',true);
+function renderSlotsReg() {
+  const taken=takenSlots(), confirmed=teams.map(t=>t.slot);
+  const grid=document.getElementById('slots-reg'); grid.innerHTML='';
+  for(let i=1;i<=12;i++) {
+    const isTaken=taken.includes(i), isPending=!confirmed.includes(i)&&isTaken, isSel=selectedSlot===i;
+    const div=document.createElement('div');
+    div.className='slot'+(isTaken?' taken':isSel?' selected':'');
+    const lbl=isTaken?(isPending?'PENDENTE':'OCUPADO'):isSel?'SELECIONADO':'LIVRE';
+    div.innerHTML=`<div class="slot-num">${String(i).padStart(2,'0')}</div><div class="slot-label">${lbl}</div>`;
+    if(!isTaken) div.onclick=()=>{selectedSlot=i;renderSlotsReg();checkDeviceLock();};
+    grid.appendChild(div);
+  }
+}
+
+// ══════════════════════════════ REGISTRATION ══════
+async function submitRegistration() {
+  if(hasRegistered()) return toast('Você já realizou uma inscrição neste dispositivo.',true);
   const team=v('f-team'),leader=v('f-leader'),m1=v('f-m1'),m2=v('f-m2'),m3=v('f-m3'),m4=v('f-m4'),r1=v('f-r1'),r2=v('f-r2');
-  if(!team)return toast('Informe o nome da equipe.',true);
-  if(!leader)return toast('Informe o nome do líder.',true);
-  if(!m1||!m2||!m3||!m4)return toast('Preencha todos os 4 membros obrigatórios.',true);
-  if(!selectedSlot)return toast('Selecione um slot.',true);
-  if(takenSlots().includes(selectedSlot))return toast('Slot já ocupado. Escolha outro.',true);
-  if(teams.find(t=>t.name.toLowerCase()===team.toLowerCase()))return toast('Já existe uma equipe com esse nome.',true);
+  if(!team) return toast('Informe o nome da equipe.',true);
+  if(!leader) return toast('Informe o nome do líder.',true);
+  if(!m1||!m2||!m3||!m4) return toast('Preencha todos os 4 membros obrigatórios.',true);
+  if(!selectedSlot) return toast('Selecione um slot.',true);
+  if(takenSlots().includes(selectedSlot)) return toast('Slot já ocupado. Escolha outro.',true);
+  if(teams.find(t=>t.name.toLowerCase()===team.toLowerCase())) return toast('Já existe uma equipe com esse nome.',true);
   const payload={team,leader,members:[m1,m2,m3,m4],reserves:[r1,r2].filter(Boolean),slot:selectedSlot};
-  cfg.mode==='paid' ? await initPixPayment(payload) : await registerFree(payload);
+  if (cfg.mode==='auto') await initPixAuto(payload);
+  else if (cfg.mode==='manual') await initPixManual(payload);
+  else await registerFree(payload);
 }
 
-async function registerFree({team,leader,members,reserves,slot}){
-  const btn=document.getElementById('btn-submit');btn.disabled=true;btn.textContent='ENVIANDO...';
-  try{const res=await db('teams','POST',{name:team,leader,members,reserves,slot});teams.push(Array.isArray(res)?res[0]:res);teams.sort((a,b)=>a.slot-b.slot);markRegistered(team);clearForm();selectedSlot=null;renderSlotsReg();checkDeviceLock();toast(`Equipe "${team}" inscrita no slot ${String(slot).padStart(2,'0')}!`);}
-  catch(e){toast('Erro: '+e.message,true);}
-  btn.disabled=false;updateHeroBadges();
+async function registerFree({team,leader,members,reserves,slot}) {
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true; btn.textContent='ENVIANDO...';
+  try {
+    const res=await db('teams','POST',{name:team,leader,members,reserves,slot});
+    teams.push(Array.isArray(res)?res[0]:res);
+    teams.sort((a,b)=>a.slot-b.slot);
+    markRegistered(team); clearForm(); selectedSlot=null;
+    renderSlotsReg(); checkDeviceLock();
+    toast(`Equipe "${team}" inscrita no slot ${String(slot).padStart(2,'0')}!`);
+  } catch(e){ toast('Erro: '+e.message,true); }
+  btn.disabled=false; updateHeroBadges();
 }
 
-// ══ PIX via Backend ══
-async function initPixPayment({team,leader,members,reserves,slot}){
-  const btn=document.getElementById('btn-submit');btn.disabled=true;btn.textContent='GERANDO PIX...';
-  try{
-    const res=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({team,leader,members,reserves,slot,amount:cfg.inscriptionValue})});
-    const data=await res.json();
-    if(!res.ok)throw new Error(data.error||'Erro ao criar pagamento.');
-    payments.push({id:data.db_id,payment_id:data.payment_id,team_name:team,leader,members,reserves,slot,status:'pending'});
-    renderSlotsReg();
-    pixData={...data,team,slot,leader,members,reserves};
-    openPixModal(data.amount,data.pix_code,data.pix_qr_b64);
-    startPixPolling(data.payment_id,data.db_id,team,slot,leader,members,reserves);
-  }catch(e){toast('Erro ao gerar Pix: '+e.message,true);}
-  btn.disabled=false;updateHeroBadges();
+// ══════════════════════════════ PIX AUTOMÁTICO (Railway API) ══════
+const API_URL = 'https://xtreinoaura-production.up.railway.app';
+
+async function initPixAuto({team,leader,members,reserves,slot}) {
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true; btn.textContent='GERANDO PIX...';
+  try {
+    const res = await fetch(`${API_URL}/criar-pagamento`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({team, leader, slot, amount: cfg.inscriptionValue, title: cfg.title})
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error||'Erro na API');
+
+    const pending = await db('payments','POST',{
+      payment_id: String(data.payment_id),
+      team_name:team, leader, members, reserves, slot, status:'pending'
+    });
+    const pendingRow = Array.isArray(pending)?pending[0]:pending;
+    payments.push(pendingRow); renderSlotsReg(); markRegistered(team);
+    pixData = {paymentId:String(data.payment_id), qrCode:data.qr_code, qrBase64:data.qr_code_base64, team, slot, dbId:pendingRow.id, leader, members, reserves, mode:'auto'};
+    openPixModalAuto(data);
+    startPixPolling(String(data.payment_id), pendingRow.id, team, slot, leader, members, reserves);
+  } catch(e) { toast('Erro ao gerar Pix: '+e.message, true); }
+  btn.disabled=false; updateHeroBadges();
 }
 
-function openPixModal(amount,pixCode,qrB64){
-  document.getElementById('pix-amount').textContent=fmtMoney(amount);
-  document.getElementById('pix-status-text').textContent='AGUARDANDO PAGAMENTO...';
-  const qrDiv=document.getElementById('qrcode');qrDiv.innerHTML='';
-  if(qrB64)qrDiv.innerHTML=`<img src="data:image/png;base64,${qrB64}" style="width:200px;height:200px;border-radius:6px">`;
-  else if(pixCode)new QRCode(qrDiv,{text:pixCode,width:200,height:200,colorDark:'#000',colorLight:'#fff'});
+function openPixModalAuto(data) {
+  document.getElementById('pix-amount').textContent = fmtMoney(cfg.inscriptionValue);
+  document.getElementById('pix-status-text').textContent = 'AGUARDANDO PAGAMENTO...';
+  document.getElementById('pix-confirm-btn').style.display = 'none';
+  document.getElementById('pix-copy-btn').style.display = 'block';
+  const qrDiv=document.getElementById('qrcode'); qrDiv.innerHTML='';
+  if (data.qr_code_base64) {
+    qrDiv.innerHTML=`<img src="data:image/png;base64,${data.qr_code_base64}" style="width:200px;height:200px;border-radius:6px">`;
+  } else if (data.qr_code) {
+    new QRCode(qrDiv,{text:data.qr_code,width:200,height:200,colorDark:'#000',colorLight:'#fff'});
+  }
   openModal('modal-pix');
 }
 
-function copyPixCode(){if(!pixData?.pix_code)return;navigator.clipboard.writeText(pixData.pix_code).then(()=>toast('Código Pix copiado!')).catch(()=>toast('Erro ao copiar.',true));}
-
-function startPixPolling(paymentId,dbId,team,slot,leader,members,reserves){
+function startPixPolling(paymentId, dbId, team, slot, leader, members, reserves) {
   let attempts=0;
-  pixPollInterval=setInterval(async()=>{
+  pixPollInterval = setInterval(async()=>{
     if(++attempts>120){stopPixPolling();return;}
-    try{
-      const res=await fetch(`/api/check/${paymentId}`);
-      const data=await res.json();
-      if(data.status==='approved'){stopPixPolling();onPixApproved(dbId,team,slot);}
-    }catch(e){}
+    try {
+      const res = await fetch(`${API_URL}/status-pagamento?id=${paymentId}`);
+      const data = await res.json();
+      if(data.status==='approved') {
+        stopPixPolling();
+        await confirmPixInDb(dbId, team, slot, leader, members, reserves);
+      }
+    } catch(e){}
   },5000);
 }
 
 function stopPixPolling(){if(pixPollInterval){clearInterval(pixPollInterval);pixPollInterval=null;}}
 
-async function onPixApproved(dbId,team,slot){
-  // Refresh teams from DB
-  try{teams=await db('teams?select=*&order=slot.asc')||[];}catch(e){}
-  payments=payments.map(p=>p.id===dbId?{...p,status:'approved'}:p);
-  markRegistered(team);clearForm();selectedSlot=null;
-  closeModal('modal-pix');
-  document.getElementById('confirmed-team-name').textContent=team;
-  document.getElementById('confirmed-slot').textContent=`#${String(slot).padStart(2,'0')}`;
-  openModal('modal-pix-ok');
-  renderSlotsReg();checkDeviceLock();
+// ══════════════════════════════ PIX MANUAL ══════
+let pixConfirmUnlocked = false;
+let pixConfirmTimer = null;
+
+async function initPixManual({team,leader,members,reserves,slot}) {
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true; btn.textContent='ABRINDO PIX...';
+  try {
+    const pending = await db('payments','POST',{
+      payment_id:`MAN-${slot}-${Date.now()}`,
+      team_name:team, leader, members, reserves, slot, status:'pending'
+    });
+    const pendingRow = Array.isArray(pending)?pending[0]:pending;
+    payments.push(pendingRow); renderSlotsReg(); markRegistered(team);
+    pixData = {team, slot, dbId:pendingRow.id, leader, members, reserves, mode:'manual'};
+    openPixModalManual();
+  } catch(e) { toast('Erro: '+e.message, true); }
+  btn.disabled=false; updateHeroBadges();
 }
 
-function cancelPix(){
+function openPixModalManual() {
+  document.getElementById('pix-amount').textContent = fmtMoney(cfg.inscriptionValue);
+  document.getElementById('pix-copy-btn').style.display = 'none';
+  const qrDiv=document.getElementById('qrcode'); qrDiv.innerHTML='';
+  if (cfg.manualQrUrl) {
+    qrDiv.innerHTML=`<img src="${cfg.manualQrUrl}" style="width:200px;height:200px;border-radius:6px;object-fit:contain">`;
+  } else {
+    qrDiv.innerHTML=`<div style="width:200px;height:200px;background:var(--surface2);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;padding:16px">QR Code não configurado no admin</div>`;
+  }
+  // Lock confirm button for 30s
+  pixConfirmUnlocked = false;
+  const confirmBtn = document.getElementById('pix-confirm-btn');
+  confirmBtn.style.display = 'block';
+  confirmBtn.disabled = true;
+  confirmBtn.style.opacity = '0.5';
+  let secs = 30;
+  confirmBtn.textContent = `✅ CONFIRMAR PAGAMENTO (aguarde ${secs}s)`;
+  document.getElementById('pix-status-text').textContent = 'EFETUE O PAGAMENTO ACIMA';
+  if (pixConfirmTimer) clearInterval(pixConfirmTimer);
+  pixConfirmTimer = setInterval(()=>{
+    secs--;
+    if (secs<=0) {
+      clearInterval(pixConfirmTimer);
+      pixConfirmUnlocked = true;
+      confirmBtn.disabled = false;
+      confirmBtn.style.opacity = '1';
+      confirmBtn.textContent = '✅ CONFIRMAR PAGAMENTO';
+      document.getElementById('pix-status-text').textContent = 'CLIQUE ABAIXO APÓS PAGAR';
+    } else {
+      confirmBtn.textContent = `✅ CONFIRMAR PAGAMENTO (aguarde ${secs}s)`;
+    }
+  },1000);
+  openModal('modal-pix');
+}
+
+async function userConfirmManualPayment() {
+  if (!pixConfirmUnlocked) return toast('Efetue o pagamento antes de confirmar.', true);
+  if (!pixData?.dbId) return;
+  showLoading(true);
+  try {
+    // Slot fica pendente — admin confirma depois
+    closeModal('modal-pix');
+    clearForm(); selectedSlot=null;
+    renderSlotsReg(); checkDeviceLock();
+    toast('Pagamento registrado! Aguarde a confirmação do administrador.');
+  } catch(e) { toast('Erro: '+e.message, true); }
+  showLoading(false);
+}
+
+// ══════════════════════════════ PIX HELPERS ══════
+async function confirmPixInDb(dbId, team, slot, leader, members, reserves) {
+  try {
+    await db(`payments?id=eq.${dbId}`,'PATCH',{status:'approved'},{Prefer:''});
+    const res = await db('teams','POST',{name:team,leader,members,reserves,slot});
+    const newTeam = Array.isArray(res)?res[0]:res;
+    teams.push(newTeam); teams.sort((a,b)=>a.slot-b.slot);
+    payments = payments.map(p=>p.id===dbId?{...p,status:'approved'}:p);
+    clearForm(); selectedSlot=null;
+    closeModal('modal-pix');
+    document.getElementById('confirmed-team-name').textContent=team;
+    document.getElementById('confirmed-slot').textContent=`#${String(slot).padStart(2,'0')}`;
+    openModal('modal-pix-ok');
+    renderSlotsReg(); checkDeviceLock();
+  } catch(e){ toast('Erro ao confirmar: '+e.message,true); }
+}
+
+function copyPixCode() {
+  if(!pixData?.qrCode) return;
+  navigator.clipboard.writeText(pixData.qrCode)
+    .then(()=>toast('Código Pix copiado!'))
+    .catch(()=>toast('Erro ao copiar.',true));
+}
+
+function cancelPix() {
   stopPixPolling();
-  if(pixData?.db_id){db(`payments?id=eq.${pixData.db_id}`,'DELETE',null,{Prefer:''}).catch(()=>{});payments=payments.filter(p=>p.id!==pixData.db_id);}
-  pixData=null;renderSlotsReg();closeModal('modal-pix');
+  if (pixConfirmTimer) clearInterval(pixConfirmTimer);
+  if(pixData?.dbId) {
+    db(`payments?id=eq.${pixData.dbId}`,'DELETE',null,{Prefer:''}).catch(()=>{});
+    payments=payments.filter(p=>p.id!==pixData.dbId);
+    localStorage.removeItem('champ_reg_v2');
+  }
+  pixData=null; renderSlotsReg(); checkDeviceLock(); closeModal('modal-pix');
 }
 
-// ══ ADMIN ══
-function openAdminModal(){document.getElementById('login-pw').value='';openModal('modal-login');setTimeout(()=>document.getElementById('login-pw').focus(),100);}
-async function doLogin(){
+// Admin confirma manualmente (para Pix Manual)
+async function adminConfirmPayment(dbId) {
+  const p=payments.find(x=>x.id===dbId); if(!p) return;
+  showLoading(true);
+  try {
+    await db(`payments?id=eq.${dbId}`,'PATCH',{status:'approved'},{Prefer:''});
+    const res=await db('teams','POST',{name:p.team_name,leader:p.leader,members:p.members,reserves:p.reserves,slot:p.slot});
+    const newTeam=Array.isArray(res)?res[0]:res;
+    teams.push(newTeam); teams.sort((a,b)=>a.slot-b.slot);
+    payments=payments.map(x=>x.id===dbId?{...x,status:'approved'}:x);
+    renderAdminView(); renderSlotsReg();
+    toast(`✅ Pagamento da equipe "${p.team_name}" confirmado!`);
+  } catch(e){toast('Erro ao confirmar: '+e.message,true);}
+  showLoading(false);
+}
+
+// ══════════════════════════════ ADMIN LOGIN ══════
+function openAdminModal() { document.getElementById('login-pw').value=''; openModal('modal-login'); setTimeout(()=>document.getElementById('login-pw').focus(),100); }
+
+async function doLogin() {
   const pw=document.getElementById('login-pw').value;
-  if(pw!==cfg.adminPassword)return toast('Senha incorreta.',true);
-  closeModal('modal-login');showLoading(true);
-  try{[teams,payments]=await Promise.all([db('teams?select=*&order=slot.asc'),db('payments?select=*&order=created_at.desc').catch(()=>[])]);teams=teams||[];payments=payments||[];}catch(e){}
-  showLoading(false);populateAdminConfig();renderAdminView();activateView('view-admin');
+  if(pw!==cfg.adminPassword) return toast('Senha incorreta.',true);
+  closeModal('modal-login'); showLoading(true);
+  try {
+    [teams,payments]=await Promise.all([db('teams?select=*&order=slot.asc'),db('payments?select=*&order=created_at.desc').catch(()=>[])]);
+    teams=teams||[]; payments=payments||[];
+  } catch(e){}
+  showLoading(false);
+  populateAdminConfig();
+  renderAdminView();
+  activateView('view-admin'); // <-- directly activate admin, never shows closed/reg
 }
 
-function populateAdminConfig(){
+// ══════════════════════════════ ADMIN CONFIG ══════
+function populateAdminConfig() {
   document.getElementById('cfg-title').value=cfg.title;
   document.getElementById('cfg-hero-img').value=cfg.heroImage;
   document.getElementById('cfg-inscription').value=cfg.inscriptionValue||'';
   document.getElementById('cfg-prize').value=cfg.prizeValue||'';
+  document.getElementById('cfg-inscription-manual').value=cfg.inscriptionValue||'';
+  document.getElementById('cfg-prize-manual').value=cfg.prizeValue||'';
+  document.getElementById('cfg-manual-qr').value=cfg.manualQrUrl||'';
   document.getElementById('cfg-open-time').value=cfg.openTime||'';
   document.getElementById('cfg-close-time').value=cfg.closeTime||'';
   document.getElementById('cfg-closed-msg').value=cfg.closedMsg||'';
-  setModeUI(cfg.mode);setRegStatusUI(cfg.regOpen?'open':'closed');updateAdminBadge();
+  setModeUI(cfg.mode);
+  setRegStatusUI(cfg.regOpen?'open':'closed');
+  updateAdminBadge();
   if(cfg.heroImage){const p=document.getElementById('img-preview');p.src=cfg.heroImage;p.classList.add('show');}
+  if(cfg.manualQrUrl){const p=document.getElementById('manual-qr-preview');p.src=cfg.manualQrUrl;p.classList.add('show');}
 }
 
 function setMode(m){cfg.mode=m;setModeUI(m);}
-function setModeUI(m){document.getElementById('opt-free').className='toggle-option'+(m==='free'?' active-free':'');document.getElementById('opt-paid').className='toggle-option'+(m==='paid'?' active-paid':'');document.getElementById('paid-config').style.display=m==='paid'?'block':'none';}
+function setModeUI(m){
+  document.getElementById('opt-free').className='toggle-option'+(m==='free'?' active-free':'');
+  document.getElementById('opt-auto').className='toggle-option'+(m==='auto'?' active-paid':'');
+  document.getElementById('opt-manual').className='toggle-option'+(m==='manual'?' active-paid':'');
+  document.getElementById('paid-auto-config').style.display=m==='auto'?'block':'none';
+  document.getElementById('paid-manual-config').style.display=m==='manual'?'block':'none';
+}
+
 function setRegStatus(s){cfg.regOpen=s==='open';setRegStatusUI(s);}
-function setRegStatusUI(s){document.getElementById('opt-open').className='toggle-option'+(s==='open'?' active-open':'');document.getElementById('opt-closed').className='toggle-option'+(s==='closed'?' active-closed':'');}
-function updateAdminBadge(){const b=document.getElementById('admin-status-badge');if(!b)return;b.className=cfg.regOpen?'status-badge-open':'status-badge-closed';b.textContent=cfg.regOpen?'● ABERTO':'● FECHADO';}
-function previewHeroImage(){const url=document.getElementById('cfg-hero-img').value.trim(),p=document.getElementById('img-preview');if(url){p.src=url;p.classList.add('show');}else p.classList.remove('show');}
+function setRegStatusUI(s){
+  document.getElementById('opt-open').className='toggle-option'+(s==='open'?' active-open':'');
+  document.getElementById('opt-closed').className='toggle-option'+(s==='closed'?' active-closed':'');
+}
+
+function updateAdminBadge(){
+  const b=document.getElementById('admin-status-badge');
+  if(!b)return;
+  b.className=cfg.regOpen?'status-badge-open':'status-badge-closed';
+  b.textContent=cfg.regOpen?'● ABERTO':'● FECHADO';
+}
+
+function previewHeroImage(){
+  const url=document.getElementById('cfg-hero-img').value.trim();
+  const p=document.getElementById('img-preview');
+  if(url){p.src=url;p.classList.add('show');}else{p.classList.remove('show');}
+}
+
+function previewManualQR(){
+  const url=document.getElementById('cfg-manual-qr').value.trim();
+  const p=document.getElementById('manual-qr-preview');
+  if(url){p.src=url;p.classList.add('show');}else{p.classList.remove('show');}
+}
 
 async function saveAllConfig(){
   const title=document.getElementById('cfg-title').value.trim().toUpperCase();
   const heroImg=document.getElementById('cfg-hero-img').value.trim();
-  const inscVal=parseFloat(document.getElementById('cfg-inscription').value)||0;
-  const prizeVal=parseFloat(document.getElementById('cfg-prize').value)||0;
-  if(!title)return toast('Informe o título.',true);
+  const manualQr=document.getElementById('cfg-manual-qr').value.trim();
+  // Read inscription/prize from whichever mode is active
+  const inscVal=cfg.mode==='manual'
+    ? parseFloat(document.getElementById('cfg-inscription-manual').value)||0
+    : parseFloat(document.getElementById('cfg-inscription').value)||0;
+  const prizeVal=cfg.mode==='manual'
+    ? parseFloat(document.getElementById('cfg-prize-manual').value)||0
+    : parseFloat(document.getElementById('cfg-prize').value)||0;
+  if(!title) return toast('Informe o título.',true);
   showLoading(true);
-  try{await Promise.all([db('config?key=eq.title','PATCH',{value:title},{Prefer:''}),db('config?key=eq.hero_image','PATCH',{value:heroImg},{Prefer:''}),db('config?key=eq.mode','PATCH',{value:cfg.mode},{Prefer:''}),db('config?key=eq.inscription_value','PATCH',{value:String(inscVal)},{Prefer:''}),db('config?key=eq.prize_value','PATCH',{value:String(prizeVal)},{Prefer:''})]);cfg.title=title;cfg.heroImage=heroImg;cfg.inscriptionValue=inscVal;cfg.prizeValue=prizeVal;applyTitles();applyHero();updateHeroBadges();document.getElementById('admin-nav-title').textContent=cfg.title;toast('Configurações salvas!');}
-  catch(e){toast('Erro: '+e.message,true);}
+  try {
+    await Promise.all([
+      db('config?key=eq.title','PATCH',{value:title},{Prefer:''}),
+      db('config?key=eq.hero_image','PATCH',{value:heroImg},{Prefer:''}),
+      db('config?key=eq.mode','PATCH',{value:cfg.mode},{Prefer:''}),
+      db('config?key=eq.inscription_value','PATCH',{value:String(inscVal)},{Prefer:''}),
+      db('config?key=eq.prize_value','PATCH',{value:String(prizeVal)},{Prefer:''}),
+      db('config?key=eq.manual_qr_url','PATCH',{value:manualQr},{Prefer:''}).catch(()=>
+        db('config','POST',{key:'manual_qr_url',value:manualQr})
+      )
+    ]);
+    cfg.title=title; cfg.heroImage=heroImg; cfg.inscriptionValue=inscVal;
+    cfg.prizeValue=prizeVal; cfg.manualQrUrl=manualQr;
+    applyTitles(); applyHero(); updateHeroBadges();
+    document.getElementById('admin-nav-title').textContent=cfg.title;
+    toast('Configurações salvas!');
+  } catch(e){toast('Erro: '+e.message,true);}
   showLoading(false);
 }
 
 async function saveRegControl(){
-  const openTime=document.getElementById('cfg-open-time').value,closeTime=document.getElementById('cfg-close-time').value,closedMsg=document.getElementById('cfg-closed-msg').value.trim()||cfg.closedMsg;
+  const openTime=document.getElementById('cfg-open-time').value;
+  const closeTime=document.getElementById('cfg-close-time').value;
+  const closedMsg=document.getElementById('cfg-closed-msg').value.trim()||cfg.closedMsg;
   showLoading(true);
-  try{await Promise.all([db('config?key=eq.reg_open','PATCH',{value:String(cfg.regOpen)},{Prefer:''}),db('config?key=eq.reg_open_time','PATCH',{value:openTime||''},{Prefer:''}),db('config?key=eq.reg_close_time','PATCH',{value:closeTime||''},{Prefer:''}),db('config?key=eq.reg_closed_msg','PATCH',{value:closedMsg},{Prefer:''})]);cfg.openTime=openTime||'';cfg.closeTime=closeTime||'';cfg.closedMsg=closedMsg;updateAdminBadge();toast('Controle salvo!');}
-  catch(e){toast('Erro: '+e.message,true);}
+  try {
+    await Promise.all([
+      db('config?key=eq.reg_open','PATCH',{value:String(cfg.regOpen)},{Prefer:''}),
+      db('config?key=eq.reg_open_time','PATCH',{value:openTime||''},{Prefer:''}),
+      db('config?key=eq.reg_close_time','PATCH',{value:closeTime||''},{Prefer:''}),
+      db('config?key=eq.reg_closed_msg','PATCH',{value:closedMsg},{Prefer:''})
+    ]);
+    cfg.openTime=openTime||''; cfg.closeTime=closeTime||''; cfg.closedMsg=closedMsg;
+    updateAdminBadge();
+    toast('Controle de inscrições salvo!');
+  } catch(e){toast('Erro: '+e.message,true);}
   showLoading(false);
 }
 
+// ══════════════════════════════ ADMIN VIEW RENDER ══════
 function renderAdminView(){
   applyTitles();
-  const pend=payments.filter(p=>p.status==='pending');
   document.getElementById('stat-teams').textContent=teams.length;
-  document.getElementById('stat-slots').textContent=12-teams.length-pend.length;
-  document.getElementById('stat-members').textContent=teams.reduce((a,t)=>a+(t.members||[]).length+1+(t.reserves||[]).length,0);
-  document.getElementById('stat-revenue').textContent=cfg.mode==='paid'?fmtMoney(teams.length*cfg.inscriptionValue):'—';
-  const map=document.getElementById('slots-admin-map');map.innerHTML='';
-  for(let i=1;i<=12;i++){const t=teams.find(t=>t.slot===i),p=pend.find(p=>p.slot===i);const div=document.createElement('div');div.className='slot-admin'+(t?' filled':p?' pending-slot':'');div.innerHTML=`<div class="num">${String(i).padStart(2,'0')}</div>${t?`<div class="sname">${esc(t.name)}</div>`:p?`<div class="sname">${esc(p.team_name)}<br><span style="font-size:9px">PIX PEND.</span></div>`:''}`;map.appendChild(div);}
+  document.getElementById('stat-slots').textContent=12-teams.length-payments.filter(p=>p.status==='pending').length;
+  const total=teams.reduce((a,t)=>a+(t.members||[]).length+(t.reserves||[]).length,0);
+  document.getElementById('stat-members').textContent=total;
+  document.getElementById('stat-revenue').textContent=(cfg.mode==='auto'||cfg.mode==='manual')?fmtMoney(teams.length*cfg.inscriptionValue):'—';
+
+  // Slot map
+  const map=document.getElementById('slots-admin-map'); map.innerHTML='';
+  const pend=payments.filter(p=>p.status==='pending');
+  for(let i=1;i<=12;i++){
+    const t=teams.find(t=>t.slot===i), p=pend.find(p=>p.slot===i);
+    const div=document.createElement('div');
+    div.className='slot-admin'+(t?' filled':p?' pending-slot':'');
+    div.innerHTML=`<div class="num">${String(i).padStart(2,'0')}</div>${t?`<div class="sname">${esc(t.name)}</div>`:p?`<div class="sname">${esc(p.team_name)}<br><span style="font-size:9px">PIX PEND.</span></div>`:''}`;
+    map.appendChild(div);
+  }
+
+  // Pending table
   const pendSec=document.getElementById('pending-section');
-  if(pend.length&&cfg.mode==='paid'){pendSec.style.display='block';let h=`<table><thead><tr><th>SLOT</th><th>EQUIPE</th><th>LÍDER</th><th>ID PAGAMENTO</th><th>DATA</th></tr></thead><tbody>`;pend.forEach(p=>{h+=`<tr><td style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f0a020">${String(p.slot).padStart(2,'0')}</td><td style="font-weight:700">${esc(p.team_name)}</td><td><span class="tag leader">${esc(p.leader)}</span></td><td style="font-size:11px;color:var(--muted)">${esc(p.payment_id)}</td><td style="color:var(--muted);font-size:12px">${p.created_at?new Date(p.created_at).toLocaleString('pt-BR'):'—'}</td></tr>`;});h+='</tbody></table>';document.getElementById('pending-table-wrap').innerHTML=h;}
-  else pendSec.style.display='none';
+  if(pend.length&&(cfg.mode==='auto'||cfg.mode==='manual')){
+    pendSec.style.display='block';
+    let h=`<table><thead><tr><th>SLOT</th><th>EQUIPE</th><th>LÍDER</th><th>MEMBROS</th><th>DATA</th><th></th></tr></thead><tbody>`;
+    pend.forEach(p=>{
+      const mH=(p.members||[]).map(m=>`<span class="tag">${esc(m)}</span>`).join('');
+      const date=p.created_at?new Date(p.created_at).toLocaleString('pt-BR'):'—';
+      h+=`<tr>
+        <td style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f0a020">${String(p.slot).padStart(2,'0')}</td>
+        <td style="font-weight:700">${esc(p.team_name)}</td>
+        <td><span class="tag leader">${esc(p.leader)}</span></td>
+        <td>${mH}</td>
+        <td style="color:var(--muted);font-size:12px">${date}</td>
+        <td><button class="btn success-btn" style="font-size:12px;padding:6px 14px;width:auto" onclick="adminConfirmPayment(${p.id})">✅ CONFIRMAR PGTO</button></td>
+      </tr>`;
+    });
+    h+='</tbody></table>';
+    document.getElementById('pending-table-wrap').innerHTML=h;
+  } else pendSec.style.display='none';
+
+  // Teams table
   const wrap=document.getElementById('teams-table-wrap');
   if(!teams.length){wrap.innerHTML='<div class="empty-state">Nenhuma equipe inscrita ainda.</div>';return;}
   let h=`<table><thead><tr><th>SLOT</th><th>EQUIPE</th><th>LÍDER</th><th>MEMBROS</th><th>RESERVAS</th>${cfg.mode==='paid'?'<th>PGTO</th>':''}<th>DATA</th><th></th></tr></thead><tbody>`;
-  teams.forEach(t=>{const mH=(t.members||[]).map(m=>`<span class="tag">${esc(m)}</span>`).join(''),rH=(t.reserves||[]).length?(t.reserves||[]).map(r=>`<span class="tag reserve">${esc(r)}</span>`).join(''):'<span style="color:var(--muted);font-size:12px">—</span>',date=t.registered_at?new Date(t.registered_at).toLocaleString('pt-BR'):'—';h+=`<tr><td style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${String(t.slot).padStart(2,'0')}</td><td style="font-weight:700">${esc(t.name)}</td><td><span class="tag leader">${esc(t.leader)}</span></td><td>${mH}</td><td>${rH}</td>${cfg.mode==='paid'?'<td><span class="badge-paid">✓ PAGO</span></td>':''}<td style="color:var(--muted);font-size:12px">${date}</td><td><button class="btn danger" onclick="askDelete(${t.id})">✕ Remover</button></td></tr>`;});
-  h+='</tbody></table>';wrap.innerHTML=h;
+  teams.forEach(t=>{
+    const mH=(t.members||[]).map(m=>`<span class="tag">${esc(m)}</span>`).join('');
+    const rH=(t.reserves||[]).length?(t.reserves||[]).map(r=>`<span class="tag reserve">${esc(r)}</span>`).join(''):'<span style="color:var(--muted);font-size:12px">—</span>';
+    const date=t.registered_at?new Date(t.registered_at).toLocaleString('pt-BR'):'—';
+    h+=`<tr><td style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${String(t.slot).padStart(2,'0')}</td><td style="font-weight:700">${esc(t.name)}</td><td><span class="tag leader">${esc(t.leader)}</span></td><td>${mH}</td><td>${rH}</td>${cfg.mode==='paid'?'<td><span class="badge-paid">✓ PAGO</span></td>':''}<td style="color:var(--muted);font-size:12px">${date}</td><td><button class="btn danger" onclick="askDelete(${t.id})">✕ Remover</button></td></tr>`;
+  });
+  h+='</tbody></table>';
+  wrap.innerHTML=h;
 }
 
-function askDelete(id){const t=teams.find(t=>t.id===id);if(!t)return;deleteTargetId=id;document.getElementById('delete-team-name').textContent=t.name;openModal('modal-delete');}
-async function confirmDelete(){const t=teams.find(t=>t.id===deleteTargetId);if(!t)return;closeModal('modal-delete');showLoading(true);try{await db(`teams?id=eq.${t.id}`,'DELETE',null,{Prefer:''});teams=teams.filter(x=>x.id!==deleteTargetId);renderAdminView();renderSlotsReg();toast(`Equipe "${t.name}" removida.`);}catch(e){toast('Erro: '+e.message,true);}showLoading(false);deleteTargetId=null;}
-async function confirmRemoveAll(){closeModal('modal-remove-all');showLoading(true);try{await db('teams?id=gt.0','DELETE',null,{Prefer:''});await db('payments?id=gt.0','DELETE',null,{Prefer:''}).catch(()=>{});teams=[];payments=[];renderAdminView();renderSlotsReg();toast('Todas as equipes removidas.');}catch(e){toast('Erro: '+e.message,true);}showLoading(false);}
+function askDelete(id){
+  const t=teams.find(t=>t.id===id);if(!t)return;
+  deleteTargetId=id;
+  document.getElementById('delete-team-name').textContent=t.name;
+  openModal('modal-delete');
+}
 
-async function savePassword(){const cur=document.getElementById('pw-current').value,nw=document.getElementById('pw-new').value,cf=document.getElementById('pw-confirm').value;if(cur!==cfg.adminPassword)return toast('Senha atual incorreta.',true);if(!nw)return toast('Informe a nova senha.',true);if(nw!==cf)return toast('As senhas não coincidem.',true);showLoading(true);try{await db('config?key=eq.admin_password','PATCH',{value:nw},{Prefer:''});cfg.adminPassword=nw;closeModal('modal-pw-bg');['pw-current','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');toast('Senha alterada!');}catch(e){toast('Erro: '+e.message,true);}showLoading(false);}
+async function confirmDelete(){
+  const t=teams.find(t=>t.id===deleteTargetId);if(!t)return;
+  closeModal('modal-delete');showLoading(true);
+  try {
+    await db(`teams?id=eq.${t.id}`,'DELETE',null,{Prefer:''});
+    teams=teams.filter(x=>x.id!==deleteTargetId);
+    renderAdminView(); renderSlotsReg();
+    toast(`Equipe "${t.name}" removida.`);
+  } catch(e){toast('Erro: '+e.message,true);}
+  showLoading(false);deleteTargetId=null;
+}
 
+async function confirmRemoveAll(){
+  closeModal('modal-remove-all');showLoading(true);
+  try {
+    await db('teams?id=gt.0','DELETE',null,{Prefer:''});
+    await db('payments?id=gt.0','DELETE',null,{Prefer:''}).catch(()=>{});
+    teams=[];payments=[];
+    renderAdminView();renderSlotsReg();
+    toast('Todas as equipes removidas.');
+  } catch(e){toast('Erro: '+e.message,true);}
+  showLoading(false);
+}
+
+// ══════════════════════════════ PASSWORD ══════
+async function savePassword(){
+  const cur=document.getElementById('pw-current').value;
+  const nw=document.getElementById('pw-new').value;
+  const cf=document.getElementById('pw-confirm').value;
+  if(cur!==cfg.adminPassword) return toast('Senha atual incorreta.',true);
+  if(!nw) return toast('Informe a nova senha.',true);
+  if(nw!==cf) return toast('As senhas não coincidem.',true);
+  showLoading(true);
+  try {
+    await db('config?key=eq.admin_password','PATCH',{value:nw},{Prefer:''});
+    cfg.adminPassword=nw;closeModal('modal-pw-bg');
+    ['pw-current','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');
+    toast('Senha alterada!');
+  } catch(e){toast('Erro: '+e.message,true);}
+  showLoading(false);
+}
+
+// ══════════════════════════════ HELPERS ══════
 function showLoading(v){document.getElementById('loading').classList.toggle('hidden',!v);}
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
