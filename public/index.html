@@ -212,8 +212,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="form-grid single" style="margin-bottom:16px">
         <div class="field"><label>Nome da Equipe <span class="req">*</span></label><input id="f-team" type="text" placeholder="Nome oficial da equipe"></div>
       </div>
-      <div class="form-grid single">
+      <div class="form-grid" style="margin-bottom:0">
         <div class="field"><label>Nome do Líder <span class="req">*</span></label><input id="f-leader" type="text" placeholder="Nome do líder / capitão"></div>
+        <div class="field"><label>Telefone do Líder <span class="req">*</span></label><input id="f-phone" type="tel" placeholder="(77) 99999-9999" maxlength="15" oninput="maskPhone(this)"></div>
       </div>
     </div>
     <div class="card">
@@ -671,24 +672,26 @@ function renderSlotsReg() {
 // ══════════════════════════════ REGISTRATION ══════
 async function submitRegistration() {
   if(hasRegistered()) return toast('Você já realizou uma inscrição neste dispositivo.',true);
-  const team=v('f-team'),leader=v('f-leader'),m1=v('f-m1'),m2=v('f-m2'),m3=v('f-m3'),m4=v('f-m4'),r1=v('f-r1'),r2=v('f-r2');
+  const team=v('f-team'),leader=v('f-leader'),phone=v('f-phone');
+  const m1=v('f-m1'),m2=v('f-m2'),m3=v('f-m3'),m4=v('f-m4'),r1=v('f-r1'),r2=v('f-r2');
   if(!team) return toast('Informe o nome da equipe.',true);
   if(!leader) return toast('Informe o nome do líder.',true);
+  if(!phone||phone.replace(/\D/g,'').length<10) return toast('Informe o telefone do líder (com DDD).',true);
   if(!m1||!m2||!m3||!m4) return toast('Preencha todos os 4 membros obrigatórios.',true);
   if(!selectedSlot) return toast('Selecione um slot.',true);
   if(takenSlots().includes(selectedSlot)) return toast('Slot já ocupado. Escolha outro.',true);
   if(teams.find(t=>t.name.toLowerCase()===team.toLowerCase())) return toast('Já existe uma equipe com esse nome.',true);
-  const payload={team,leader,members:[m1,m2,m3,m4],reserves:[r1,r2].filter(Boolean),slot:selectedSlot};
+  const payload={team,leader,phone,members:[m1,m2,m3,m4],reserves:[r1,r2].filter(Boolean),slot:selectedSlot};
   if (cfg.mode==='auto') await initPixAuto(payload);
   else if (cfg.mode==='manual') await initPixManual(payload);
   else await registerFree(payload);
 }
 
-async function registerFree({team,leader,members,reserves,slot}) {
+async function registerFree({team,leader,phone,members,reserves,slot}) {
   const btn=document.getElementById('btn-submit');
   btn.disabled=true; btn.textContent='ENVIANDO...';
   try {
-    const res=await db('teams','POST',{name:team,leader,members,reserves,slot});
+    const res=await db('teams','POST',{name:team,leader,phone:phone||'',members,reserves,slot});
     teams.push(Array.isArray(res)?res[0]:res);
     teams.sort((a,b)=>a.slot-b.slot);
     markRegistered(team); clearForm(); selectedSlot=null;
@@ -1046,12 +1049,13 @@ function renderAdminView(){
   // Teams table
   const wrap=document.getElementById('teams-table-wrap');
   if(!teams.length){wrap.innerHTML='<div class="empty-state">Nenhuma equipe inscrita ainda.</div>';return;}
-  let h=`<table><thead><tr><th>SLOT</th><th>EQUIPE</th><th>LÍDER</th><th>MEMBROS</th><th>RESERVAS</th>${cfg.mode==='paid'?'<th>PGTO</th>':''}<th>DATA</th><th></th></tr></thead><tbody>`;
+  let h=`<table><thead><tr><th>SLOT</th><th>EQUIPE</th><th>LÍDER</th><th>TELEFONE</th><th>MEMBROS</th><th>RESERVAS</th>${(cfg.mode==='auto'||cfg.mode==='manual')?'<th>PGTO</th>':''}<th>DATA</th><th></th></tr></thead><tbody>`;
   teams.forEach(t=>{
     const mH=(t.members||[]).map(m=>`<span class="tag">${esc(m)}</span>`).join('');
     const rH=(t.reserves||[]).length?(t.reserves||[]).map(r=>`<span class="tag reserve">${esc(r)}</span>`).join(''):'<span style="color:var(--muted);font-size:12px">—</span>';
     const date=t.registered_at?new Date(t.registered_at).toLocaleString('pt-BR'):'—';
-    h+=`<tr><td style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${String(t.slot).padStart(2,'0')}</td><td style="font-weight:700">${esc(t.name)}</td><td><span class="tag leader">${esc(t.leader)}</span></td><td>${mH}</td><td>${rH}</td>${cfg.mode==='paid'?'<td><span class="badge-paid">✓ PAGO</span></td>':''}<td style="color:var(--muted);font-size:12px">${date}</td><td><button class="btn danger" onclick="askDelete(${t.id})">✕ Remover</button></td></tr>`;
+    const phoneCell=`<td style="font-size:13px;color:var(--text)">${esc(t.phone||'—')}</td>`;
+    h+=`<tr><td style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${String(t.slot).padStart(2,'0')}</td><td style="font-weight:700">${esc(t.name)}</td><td><span class="tag leader">${esc(t.leader)}</span></td>${phoneCell}<td>${mH}</td><td>${rH}</td>${(cfg.mode==='auto'||cfg.mode==='manual')?'<td><span class="badge-paid">✓ PAGO</span></td>':''}<td style="color:var(--muted);font-size:12px">${date}</td><td><button class="btn danger" onclick="askDelete(${t.id})">✕ Remover</button></td></tr>`;
   });
   h+='</tbody></table>';
   wrap.innerHTML=h;
@@ -1116,7 +1120,16 @@ function toast(msg,err=false){const el=document.getElementById('toast');el.textC
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function v(id){return document.getElementById(id).value.trim();}
 function fmtMoney(val){return 'R$ '+parseFloat(val||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function clearForm(){['f-team','f-leader','f-m1','f-m2','f-m3','f-m4','f-r1','f-r2'].forEach(id=>document.getElementById(id).value='');}
+function maskPhone(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length > 11) v = v.slice(0,11);
+  if (v.length > 7) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+  else if (v.length > 0) v = `(${v}`;
+  el.value = v;
+}
+
+function clearForm(){['f-team','f-leader','f-phone','f-m1','f-m2','f-m3','f-m4','f-r1','f-r2'].forEach(id=>document.getElementById(id).value='');}
 
 init();
 </script>
