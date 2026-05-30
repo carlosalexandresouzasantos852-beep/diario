@@ -152,6 +152,10 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .img-preview{width:100%;height:120px;border-radius:6px;object-fit:cover;margin-top:8px;display:none;border:1px solid var(--border);}
 .img-preview.show{display:block;}
 
+/* ── FREE PRIZE SECTION ── */
+.free-prize-box{background:rgba(129,31,221,.08);border:1px solid rgba(129,31,221,.3);border-radius:6px;padding:16px;margin-top:16px;}
+.free-prize-box .fp-label{font-size:11px;letter-spacing:2px;color:var(--muted);font-weight:700;margin-bottom:10px;}
+
 /* ── MODALS ── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
@@ -174,15 +178,13 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .reg-notice{background:rgba(64,192,128,.1);border:1px solid var(--success);border-radius:8px;padding:18px 22px;margin-bottom:20px;display:none;align-items:center;gap:14px;}
 .reg-notice.show{display:flex;}
 
-/* ── BRACKET COMPLETO ESTILO LIBERTADORES ── */
+/* ── BRACKET ── */
 .bk-outer{background:var(--bg);padding:20px 8px 32px;overflow-x:auto;min-height:400px;}
 .bk-header{text-align:center;margin-bottom:24px;}
 .bk-header h2{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--accent);letter-spacing:4px;}
 .bk-header p{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:3px;}
 .bk-field{display:flex;align-items:center;justify-content:center;gap:0;}
-/* rounds column */
 .bk-round{display:flex;flex-direction:column;justify-content:space-around;gap:0;}
-/* individual match slot */
 .bk-match{display:flex;flex-direction:column;margin:6px 0;position:relative;}
 .bk-team{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:6px 10px;min-width:148px;max-width:160px;cursor:default;transition:all .2s;position:relative;}
 .bk-team.winner{border-color:var(--success);background:rgba(64,192,128,.08);}
@@ -193,106 +195,29 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .bk-team .bk-seed{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--accent);min-width:16px;flex-shrink:0;}
 .bk-team .bk-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
 .bk-team.empty .bk-name{color:var(--muted);font-weight:400;font-style:italic;}
-/* connector lines between rounds */
 .bk-conn{display:flex;flex-direction:column;justify-content:space-around;width:20px;flex-shrink:0;}
 .bk-conn-pair{display:flex;flex-direction:column;flex:1;align-items:stretch;position:relative;}
-/* center trophy */
 .bk-center{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 18px;min-width:120px;}
 .bk-trophy{font-size:44px;animation:float 3s ease-in-out infinite;text-align:center;}
 .bk-prize{background:linear-gradient(135deg,#b8860a,#f0c040,#b8860a);border-radius:10px;padding:10px 16px;margin-top:8px;text-align:center;box-shadow:0 4px 20px rgba(240,192,64,.4);}
 .bk-prize .bp-label{font-size:8px;letter-spacing:3px;color:rgba(10,10,15,.6);font-weight:700;}
 .bk-prize .bp-val{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--bg);line-height:1;margin-top:1px;}
-/* win button (admin only) */
 .bk-win-btn{font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid var(--success);background:rgba(64,192,128,.15);color:var(--success);cursor:pointer;margin-left:4px;flex-shrink:0;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
 .bk-win-btn:hover{background:var(--success);color:var(--bg);}
 .bk-round-label{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:6px;}
 
-
 /* ═════════ FULLSCREEN BRACKET ═════════ */
-
-.bracket-fullscreen{
-  width:100vw;
-  height:100vh;
-  background:var(--bg);
-  position:fixed;
-  inset:0;
-  z-index:999;
-  overflow:auto;
-}
-
-.bracket-modal-full{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.95);
-  z-index:9999;
-  display:none;
-  overflow:auto;
-}
-
-.bracket-modal-full.open{
-  display:block;
-}
-
-.bracket-modal-content{
-  width:100vw;
-  min-height:100vh;
-  background:var(--bg);
-  padding:30px;
-}
-
-.bracket-close-btn{
-  position:fixed;
-  top:20px;
-  right:20px;
-  z-index:10000;
-  background:#e04040;
-  color:#fff;
-  border:none;
-  border-radius:8px;
-  padding:12px 20px;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.bracket-close-btn:hover{
-  transform:scale(1.05);
-}
-
-#bracket-wrap,
-#bracket-public-wrap{
-  width:100%;
-  min-width:100%;
-  padding:30px;
-  padding-top:100px;
-}
-
-.bk-outer{
-  overflow:visible !important;
-  width:100%;
-  min-height:100vh;
-  padding:20px;
-}
-
-.bk-field{
-  width:100%;
-  justify-content:center;
-  transform:scale(1.15);
-  transform-origin:top center;
-}
-
-@media(max-width:1400px){
-  .bk-field{
-    transform:scale(1);
-  }
-}
-
-@media(max-width:1100px){
-  .bk-field{
-    transform:scale(.85);
-  }
-}
-
+.bracket-fullscreen{width:100vw;height:100vh;background:var(--bg);position:fixed;inset:0;z-index:999;overflow:auto;}
+.bracket-modal-full{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:none;overflow:auto;}
+.bracket-modal-full.open{display:block;}
+.bracket-modal-content{width:100vw;min-height:100vh;background:var(--bg);padding:30px;}
+.bracket-close-btn{position:fixed;top:20px;right:20px;z-index:10000;background:#e04040;color:#fff;border:none;border-radius:8px;padding:12px 20px;font-weight:700;cursor:pointer;transition:.2s;}
+.bracket-close-btn:hover{transform:scale(1.05);}
+#bracket-wrap,#bracket-public-wrap{width:100%;min-width:100%;padding:30px;padding-top:100px;}
+.bk-outer{overflow:visible !important;width:100%;min-height:100vh;padding:20px;}
+.bk-field{width:100%;justify-content:center;transform:scale(1.15);transform-origin:top center;}
+@media(max-width:1400px){.bk-field{transform:scale(1);}}
+@media(max-width:1100px){.bk-field{transform:scale(.85);}}
 </style>
 </head>
 <body>
@@ -300,7 +225,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 <div id="toast"></div>
 <div class="loading-overlay" id="loading"><div class="spinner"></div><p>CARREGANDO...</p></div>
 
-<!-- ══════════════ VIEW: REGISTRO (inscrições abertas) ══════════════ -->
+<!-- ══════════════ VIEW: REGISTRO ══════════════ -->
 <div id="view-reg" class="view">
   <nav>
     <div class="nav-title" id="reg-nav-title">CAMPEONATO</div>
@@ -312,10 +237,10 @@ tr:hover td{background:rgba(255,255,255,.02);}
     <div class="hero-pattern"></div>
     <div class="hero-content">
       <h1 id="reg-hero-title">CAMPEONATO</h1>
-      <div class="sub">INSCRIÇÃO DE EQUIPES</div>
+      <div class="sub" id="reg-hero-sub">INSCRIÇÃO DE EQUIPES</div>
       <div class="hero-badges" id="hero-badges" style="display:none">
-        <div class="hero-badge"><div class="badge-val" id="badge-inscription">R$ 0</div><div class="badge-key">INSCRIÇÃO</div></div>
-        <div class="hero-badge"><div class="badge-val" id="badge-prize">R$ 0</div><div class="badge-key">PREMIAÇÃO</div></div>
+        <div class="hero-badge"><div class="badge-val" id="badge-inscription">GRÁTIS</div><div class="badge-key">INSCRIÇÃO</div></div>
+        <div class="hero-badge" id="badge-prize-wrap"><div class="badge-val" id="badge-prize">R$ 0</div><div class="badge-key">PREMIAÇÃO</div></div>
       </div>
     </div>
   </div>
@@ -342,8 +267,8 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="form-grid">
         <div class="field"><label>Membro 1 <span class="req">*</span></label><input id="f-m1" type="text" placeholder="Nome do membro 1"></div>
         <div class="field"><label>Membro 2 <span class="req">*</span></label><input id="f-m2" type="text" placeholder="Nome do membro 2"></div>
-        <div class="field"><label>Membro 3 <span class="req">*</span></label><input id="f-m3" type="text" placeholder="Nome do membro 3"></div>
-        <div class="field"><label>Membro 4 <span class="req">*</span></label><input id="f-m4" type="text" placeholder="Nome do membro 4"></div>
+        <div class="field" id="field-m3"><label>Membro 3 <span class="req">*</span></label><input id="f-m3" type="text" placeholder="Nome do membro 3"></div>
+        <div class="field" id="field-m4"><label>Membro 4 <span class="req">*</span></label><input id="f-m4" type="text" placeholder="Nome do membro 4"></div>
       </div>
       <div class="divider"></div>
       <div class="form-grid">
@@ -353,14 +278,14 @@ tr:hover td{background:rgba(255,255,255,.02);}
     </div>
     <div class="card">
       <div class="card-title"><div class="icon">3</div> ESCOLHA SEU SLOT</div>
-      <p id="slots-desc" style="font-size:13px;color:var(--muted);margin-bottom:16px">Selecione um slot disponível. Slots ocupados não podem ser escolhidos.</p>
+      <p id="slots-desc" style="font-size:13px;color:var(--muted);margin-bottom:16px">Selecione um slot disponível.</p>
       <div class="slots-grid" id="slots-reg"></div>
     </div>
     <button class="btn" id="btn-submit" onclick="submitRegistration()">CONFIRMAR INSCRIÇÃO</button>
   </div>
 </div>
 
-<!-- ══════════════ VIEW: INSCRIÇÕES FECHADAS ══════════════ -->
+<!-- ══════════════ VIEW: FECHADO ══════════════ -->
 <div id="view-closed" class="view">
   <nav>
     <div class="nav-title" id="closed-nav-title">CAMPEONATO</div>
@@ -391,19 +316,16 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
 <!-- ══════════════ VIEW: CHAVEAMENTO PÚBLICO ══════════════ -->
 <div id="view-bracket" class="view">
-  <nav>
-    <div class="nav-title" id="bracket-nav-title">CAMPEONATO</div>
-    <button class="nav-btn" onclick="openAdminModal()">⚙ ADMIN</button>
-  </nav>
   <div class="bracket-fullscreen">
     <nav>
       <div class="nav-title" id="bracket-nav-title">CAMPEONATO</div>
       <button class="nav-btn" onclick="openAdminModal()">⚙ ADMIN</button>
     </nav>
-
     <div id="bracket-public-wrap"></div>
   </div>
 </div>
+
+<!-- ══════════════ VIEW: ADMIN ══════════════ -->
 <div id="view-admin" class="view">
   <nav>
     <div class="nav-title" id="admin-nav-title">CAMPEONATO</div>
@@ -437,6 +359,8 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <div class="field"><label>URL da Imagem</label><input id="cfg-hero-img" type="text" placeholder="https://exemplo.com/imagem.jpg" oninput="previewHeroImage()"></div>
       <img id="img-preview" class="img-preview" alt="Preview">
     </div>
+
+    <!-- ── SISTEMA DE CAMPEONATO ── -->
     <div class="config-section">
       <div class="config-section-title">⚙ SISTEMA DE CAMPEONATO</div>
       <div class="toggle-row">
@@ -444,12 +368,21 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="toggle-option" id="opt-auto" onclick="setMode('auto')">⚡ PIX AUTOMÁTICO</div>
         <div class="toggle-option" id="opt-manual" onclick="setMode('manual')">📱 PIX MANUAL</div>
       </div>
+
+      <!-- PIX AUTO config -->
       <div class="paid-extra" id="paid-auto-config" style="display:none">
         <div class="form-grid">
           <div class="field"><label>Valor da Inscrição (R$)</label><input id="cfg-inscription" type="number" step="0.01" min="0" placeholder="Ex: 25.00"></div>
           <div class="field"><label>Valor da Premiação (R$)</label><input id="cfg-prize" type="number" step="0.01" min="0" placeholder="Ex: 200.00"></div>
         </div>
+        <div class="form-grid single" style="margin-top:12px">
+          <div class="field"><label>Descrição da Premiação <span style="color:var(--muted);font-size:10px">(opcional — substitui o valor em R$)</span></label>
+            <input id="cfg-prize-text-auto" type="text" placeholder="Ex: Vaga no Campeonato Regional + R$ 200,00">
+          </div>
+        </div>
       </div>
+
+      <!-- PIX MANUAL config -->
       <div class="paid-extra" id="paid-manual-config" style="display:none">
         <div class="form-grid single" style="margin-bottom:12px">
           <div class="field">
@@ -462,8 +395,24 @@ tr:hover td{background:rgba(255,255,255,.02);}
           <div class="field"><label>Valor da Inscrição (R$)</label><input id="cfg-inscription-manual" type="number" step="0.01" min="0" placeholder="Ex: 25.00"></div>
           <div class="field"><label>Valor da Premiação (R$)</label><input id="cfg-prize-manual" type="number" step="0.01" min="0" placeholder="Ex: 200.00"></div>
         </div>
+        <div class="form-grid single" style="margin-top:12px">
+          <div class="field"><label>Descrição da Premiação <span style="color:var(--muted);font-size:10px">(opcional — substitui o valor em R$)</span></label>
+            <input id="cfg-prize-text-manual" type="text" placeholder="Ex: Vaga no Campeonato Regional + R$ 200,00">
+          </div>
+        </div>
       </div>
-      <div id="gamemode-4x4-config"></div>
+
+      <!-- GRÁTIS com premiação — só para 4x4 / 2v2 -->
+      <div id="free-prize-section" class="free-prize-box" style="display:none">
+        <div class="fp-label">🏅 PREMIAÇÃO (modo grátis — 4x4 / 2v2)</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Aparecerá no banner da inscrição mesmo sem cobrança.</p>
+        <div class="form-grid single">
+          <div class="field">
+            <label>Descrição da Premiação</label>
+            <input id="cfg-free-prize-text" type="text" placeholder="Ex: Vaga no diário + troféu + medalhas">
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- MODO DE JOGO -->
@@ -477,7 +426,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
     </div>
     <button class="btn" style="max-width:320px;margin-bottom:32px" onclick="saveAllConfig()">💾 SALVAR CONFIGURAÇÕES</button>
 
-    <!-- CONFIG: Controle de Inscrições -->
+    <!-- CONTROLE DE INSCRIÇÕES -->
     <div class="section-title">CONTROLE DE INSCRIÇÕES</div>
     <div class="config-section">
       <div class="config-section-title">🚦 STATUS</div>
@@ -532,7 +481,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
-<!-- ══════════════ LOGO MODAL ══════════════ -->
+<!-- LOGO MODAL -->
 <div class="modal-bg" id="modal-logo">
   <div class="modal" style="max-width:400px">
     <h3>🖼 LOGO DA EQUIPE</h3>
@@ -549,7 +498,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
-<!-- ══════════════ MODALS ══════════════ -->
+<!-- LOGIN MODAL -->
 <div class="modal-bg" id="modal-login">
   <div class="modal">
     <h3>🔒 ACESSO ADMIN</h3>
@@ -561,6 +510,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
+<!-- PW MODAL -->
 <div class="modal-bg" id="modal-pw-bg">
   <div class="modal">
     <h3>🔑 ALTERAR SENHA</h3>
@@ -574,6 +524,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
+<!-- DELETE MODAL -->
 <div class="modal-bg" id="modal-delete">
   <div class="modal">
     <h3>⚠ REMOVER EQUIPE</h3>
@@ -586,11 +537,12 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
+<!-- REMOVE ALL MODAL -->
 <div class="modal-bg" id="modal-remove-all">
   <div class="modal">
     <h3>⚠ REMOVER TODAS AS EQUIPES</h3>
     <p style="font-size:14px;color:var(--muted);margin-bottom:8px">Tem certeza que deseja remover <strong style="color:var(--danger)">TODAS</strong> as equipes?</p>
-    <p style="font-size:12px;color:var(--danger)">Todos os slots serão liberados e todas as pessoas poderão se inscrever novamente.</p>
+    <p style="font-size:12px;color:var(--danger)">Todos os slots serão liberados.</p>
     <div class="modal-actions">
       <button class="btn secondary" onclick="closeModal('modal-remove-all')">Cancelar</button>
       <button class="btn danger" onclick="confirmRemoveAll()">REMOVER TODAS</button>
@@ -598,10 +550,11 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
+<!-- PIX MODAL -->
 <div class="modal-bg" id="modal-pix">
   <div class="modal" style="max-width:420px">
     <h3>💳 PAGAMENTO VIA PIX</h3>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Escaneie o QR Code ou copie o código para pagar via Pix. Após o pagamento, aguarde a confirmação.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Escaneie o QR Code ou copie o código para pagar via Pix.</p>
     <div class="pix-box">
       <div id="qrcode"></div>
       <div class="pix-amount" id="pix-amount">R$ 0,00</div>
@@ -616,6 +569,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
 </div>
 
+<!-- PIX OK MODAL -->
 <div class="modal-bg" id="modal-pix-ok">
   <div class="modal" style="text-align:center">
     <div style="font-size:60px;margin-bottom:12px">✅</div>
@@ -648,7 +602,7 @@ let cfg = {
   title:'CAMPEONATO', adminPassword:'1234',
   mpToken:'APP_USR-4766650062661738-051800-8f19c51414cba06ebb169062fd8ea7e9-1267177292',
   mode:'free', inscriptionValue:0, prizeValue:0, heroImage:'', manualQrUrl:'',
-  gameMode:'normal',
+  gameMode:'normal', freePrizeText:'', prizeTextAuto:'', prizeTextManual:'',
   regOpen:true, openTime:'', closeTime:'',
   closedMsg:'As inscrições estão encerradas no momento. Fique de olho nas nossas redes sociais para saber quando abriremos novamente!'
 };
@@ -687,6 +641,9 @@ function parseConfig(rows) {
     if (r.key==='hero_image') cfg.heroImage=r.value;
     if (r.key==='manual_qr_url') cfg.manualQrUrl=r.value||'';
     if (r.key==='game_mode') cfg.gameMode=r.value||'normal';
+    if (r.key==='free_prize_text') cfg.freePrizeText=r.value||'';
+    if (r.key==='prize_text_auto') cfg.prizeTextAuto=r.value||'';
+    if (r.key==='prize_text_manual') cfg.prizeTextManual=r.value||'';
     if (r.key==='reg_open') cfg.regOpen=r.value==='true';
     if (r.key==='reg_open_time') cfg.openTime=r.value||'';
     if (r.key==='reg_close_time') cfg.closeTime=r.value||'';
@@ -696,7 +653,6 @@ function parseConfig(rows) {
 
 // ══════════════════════════════ ROUTING ══════
 function routeView() {
-  // Compute effective open/closed status from times
   const now = new Date();
   if (cfg.openTime && now >= new Date(cfg.openTime) && (!cfg.closeTime || now < new Date(cfg.closeTime))) cfg.regOpen=true;
   if (cfg.closeTime && now >= new Date(cfg.closeTime)) cfg.regOpen=false;
@@ -720,7 +676,6 @@ function goClosed() {
   applyHero();
   document.getElementById('closed-champ-sub').textContent = cfg.title;
   document.getElementById('closed-msg-display').textContent = cfg.closedMsg;
-  // Countdown
   if (regTimerInterval) { clearInterval(regTimerInterval); regTimerInterval=null; }
   const timerEl = document.getElementById('closed-timer');
   if (cfg.openTime && new Date(cfg.openTime) > new Date()) {
@@ -732,12 +687,9 @@ function goClosed() {
   activateView('view-closed');
 }
 
-function logout() {
-  routeView();
-}
+function logout() { routeView(); }
 
 // ══════════════════════════════ VIEW SWITCHER ══════
-// This is the single source of truth — only ONE view is ever active
 function activateView(id) {
   document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -752,10 +704,8 @@ function applyTitles() {
 }
 
 function applyHero() {
-  // Registration view hero
   const regBg=document.getElementById('reg-hero-bg');
   const regOv=document.getElementById('reg-hero-overlay');
-  // Closed view hero
   const clBg=document.getElementById('closed-hero-bg');
   const clOv=document.getElementById('closed-hero-overlay');
   [regBg, clBg].forEach(el => {
@@ -769,18 +719,44 @@ function applyHero() {
   });
 }
 
+// ══════════════════════════════ HERO BADGES ══════
+// Regras:
+// - Modo pago (auto/manual): mostra INSCRIÇÃO (valor R$) + PREMIAÇÃO (texto ou R$)
+// - Modo grátis + 4x4/2v2 + freePrizeText preenchido: mostra INSCRIÇÃO GRÁTIS + PREMIAÇÃO (texto)
+// - Modo grátis + normal: não mostra badges
 function updateHeroBadges() {
-  const badges=document.getElementById('hero-badges');
-  const btn=document.getElementById('btn-submit');
-  const isPaid = cfg.mode==='auto' || cfg.mode==='manual';
+  const badges = document.getElementById('hero-badges');
+  const badgeInscEl = document.getElementById('badge-inscription');
+  const badgePrizeEl = document.getElementById('badge-prize');
+  const badgePrizeWrap = document.getElementById('badge-prize-wrap');
+  const btn = document.getElementById('btn-submit');
+
+  const isPaid = cfg.mode === 'auto' || cfg.mode === 'manual';
+  const isBracket = cfg.gameMode === '4x4' || cfg.gameMode === '2v2';
+  const hasFreeText = cfg.freePrizeText && cfg.freePrizeText.trim().length > 0;
+
   if (isPaid) {
-    badges.style.display='flex';
-    document.getElementById('badge-inscription').textContent=fmtMoney(cfg.inscriptionValue);
-    document.getElementById('badge-prize').textContent=fmtMoney(cfg.prizeValue);
-    if (btn && !btn.disabled) btn.textContent=`INSCREVER E PAGAR ${fmtMoney(cfg.inscriptionValue)}`;
+    badges.style.display = 'flex';
+    badgeInscEl.textContent = fmtMoney(cfg.inscriptionValue);
+    // Prize: use custom text if set, otherwise R$ value
+    const prizeText = (cfg.mode === 'auto' ? cfg.prizeTextAuto : cfg.prizeTextManual) || '';
+    if (prizeText.trim()) {
+      badgePrizeEl.textContent = prizeText.trim();
+    } else {
+      badgePrizeEl.textContent = fmtMoney(cfg.prizeValue);
+    }
+    badgePrizeWrap.style.display = 'flex';
+    if (btn && !btn.disabled) btn.textContent = `INSCREVER E PAGAR ${fmtMoney(cfg.inscriptionValue)}`;
+  } else if (isBracket && hasFreeText) {
+    // Grátis com premiação para bracket modes
+    badges.style.display = 'flex';
+    badgeInscEl.textContent = 'GRÁTIS';
+    badgePrizeEl.textContent = cfg.freePrizeText.trim();
+    badgePrizeWrap.style.display = 'flex';
+    if (btn && !btn.disabled) btn.textContent = 'CONFIRMAR INSCRIÇÃO';
   } else {
-    badges.style.display='none';
-    if (btn && !btn.disabled) btn.textContent='CONFIRMAR INSCRIÇÃO';
+    badges.style.display = 'none';
+    if (btn && !btn.disabled) btn.textContent = 'CONFIRMAR INSCRIÇÃO';
   }
 }
 
@@ -815,11 +791,7 @@ function checkDeviceLock() {
   const notice=document.getElementById('already-registered-notice');
   const btn=document.getElementById('btn-submit');
   if (locked) {
-    // In bracket mode, switch to public bracket view instead of showing notice
-    if (isBracket) {
-      showPublicBracket();
-      return;
-    }
+    if (isBracket) { showPublicBracket(); return; }
     notice.classList.add('show');
     if (btn) { btn.disabled=true; btn.style.opacity='0.4'; btn.textContent='✅ INSCRIÇÃO JÁ REALIZADA'; }
     document.querySelectorAll('#view-reg input').forEach(el=>el.disabled=true);
@@ -835,15 +807,12 @@ function checkDeviceLock() {
 function showPublicBracket() {
   document.getElementById('bracket-nav-title').textContent = cfg.title;
   const wrap = document.getElementById('bracket-public-wrap');
-  // Reuse renderBracket but target the public wrap
   const saved = document.getElementById('bracket-wrap');
-  const tempId = 'bracket-wrap';
-  // Temporarily point bracket-wrap to public wrap
-  wrap.id = tempId;
+  wrap.id = 'bracket-wrap';
   if(saved) saved.id = 'bracket-wrap-modal';
   renderBracket();
   wrap.id = 'bracket-public-wrap';
-  if(saved) saved.id = tempId;
+  if(saved) saved.id = 'bracket-wrap';
   activateView('view-bracket');
 }
 
@@ -913,7 +882,7 @@ async function registerFree({team,leader,phone,members,reserves,slot}) {
   btn.disabled=false; updateHeroBadges();
 }
 
-// ══════════════════════════════ PIX AUTOMÁTICO (Railway API) ══════
+// ══════════════════════════════ PIX AUTOMÁTICO ══════
 const API_URL = 'https://organizacaoauraxt.up.railway.app';
 
 async function initPixAuto({team,leader,members,reserves,slot}) {
@@ -927,17 +896,11 @@ async function initPixAuto({team,leader,members,reserves,slot}) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error||'Erro na API');
-
-    // API já salva no Supabase — só atualiza cache local
-    const pendingRow = {
-      id: data.db_id,
-      payment_id: data.payment_id,
-      team_name: team, leader, members, reserves, slot, status:'pending'
-    };
+    const pendingRow = {id:data.db_id,payment_id:data.payment_id,team_name:team,leader,members,reserves,slot,status:'pending'};
     payments.push(pendingRow);
     renderSlotsReg();
     markRegistered(team);
-    pixData = {paymentId:data.payment_id, qrCode:data.pix_code, qrBase64:data.pix_qr_b64, team, slot, dbId:data.db_id, leader, members, reserves, mode:'auto'};
+    pixData = {paymentId:data.payment_id,qrCode:data.pix_code,qrBase64:data.pix_qr_b64,team,slot,dbId:data.db_id,leader,members,reserves,mode:'auto'};
     openPixModalAuto(data);
     startPixPolling(data.payment_id, data.db_id, team, slot, leader, members, reserves);
   } catch(e) { toast('Erro ao gerar Pix: '+e.message, true); }
@@ -1004,7 +967,6 @@ function openPixModalManual() {
   } else {
     qrDiv.innerHTML=`<div style="width:200px;height:200px;background:var(--surface2);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;padding:16px">QR Code não configurado no admin</div>`;
   }
-  // Lock confirm button for 30s
   pixConfirmUnlocked = false;
   const confirmBtn = document.getElementById('pix-confirm-btn');
   confirmBtn.style.display = 'block';
@@ -1035,7 +997,6 @@ async function userConfirmManualPayment() {
   if (!pixData?.dbId) return;
   showLoading(true);
   try {
-    // Slot fica pendente — admin confirma depois
     closeModal('modal-pix');
     clearForm(); selectedSlot=null;
     renderSlotsReg(); checkDeviceLock();
@@ -1082,7 +1043,6 @@ function cancelPix() {
   pixData=null; renderSlotsReg(); checkDeviceLock(); closeModal('modal-pix');
 }
 
-// Admin confirma manualmente (para Pix Manual)
 async function adminConfirmPayment(dbId) {
   const p=payments.find(x=>x.id===dbId); if(!p) return;
   showLoading(true);
@@ -1099,13 +1059,10 @@ async function adminConfirmPayment(dbId) {
 }
 
 // ══════════════════════════════ BRACKET ENGINE ══════
-// State: bracketResults[round][matchIndex] = winnerSlot
-// Rounds: 'r8' (oitavas), 'r4' (quartas), 'r2' (semi), 'r1' (final)
 let bracketResults = {};
 
-// Matchups for oitavas: left side 1v3,5v7,9v11,13v15 | right side 2v4,6v8,10v12,14v16
-const R8_LEFT  = [[1,3],[5,7],[9,11],[13,15]];  // matchIdx 0-3
-const R8_RIGHT = [[2,4],[6,8],[10,12],[14,16]]; // matchIdx 4-7
+const R8_LEFT  = [[1,3],[5,7],[9,11],[13,15]];
+const R8_RIGHT = [[2,4],[6,8],[10,12],[14,16]];
 
 async function loadBracketResults() {
   try {
@@ -1135,44 +1092,30 @@ async function setWinner(round, matchIndex, winnerSlot) {
   showLoading(false);
 }
 
-function getWinner(round, matchIdx) {
-  return bracketResults[round]?.[matchIdx] || null;
-}
-
-// Get team by slot
+function getWinner(round, matchIdx) { return bracketResults[round]?.[matchIdx] || null; }
 function teamBySlot(slot) { return slot ? teams.find(t=>t.slot===slot)||null : null; }
-
-// Get winner of a previous match to advance
 function advancedTeam(round, matchIdx) {
   const w = getWinner(round, matchIdx);
   return w ? teamBySlot(w) : null;
 }
 
-// Build full bracket structure
-// Returns {r8:[{slotA,slotB,matchIdx}x8], r4:[4], r2:[2], r1:[1]}
 function buildBracket() {
-  // R8 - oitavas
   const r8 = [
     ...R8_LEFT.map(([a,b],i)=>({slotA:a,slotB:b,matchIdx:i,side:'left'})),
     ...R8_RIGHT.map(([a,b],i)=>({slotA:a,slotB:b,matchIdx:i+4,side:'right'}))
   ];
-  // R4 - quartas: winners of r8 pairs
-  // Left: r8[0]winner vs r8[1]winner (matchIdx 0), r8[2]winner vs r8[3]winner (matchIdx 1)
-  // Right: r8[4]winner vs r8[5]winner (matchIdx 2), r8[6]winner vs r8[7]winner (matchIdx 3)
   const r4 = [
-    {matchIdx:0, side:'left',  prevA:{round:'r8',idx:0}, prevB:{round:'r8',idx:1}},
-    {matchIdx:1, side:'left',  prevA:{round:'r8',idx:2}, prevB:{round:'r8',idx:3}},
-    {matchIdx:2, side:'right', prevA:{round:'r8',idx:4}, prevB:{round:'r8',idx:5}},
-    {matchIdx:3, side:'right', prevA:{round:'r8',idx:6}, prevB:{round:'r8',idx:7}},
+    {matchIdx:0,side:'left', prevA:{round:'r8',idx:0},prevB:{round:'r8',idx:1}},
+    {matchIdx:1,side:'left', prevA:{round:'r8',idx:2},prevB:{round:'r8',idx:3}},
+    {matchIdx:2,side:'right',prevA:{round:'r8',idx:4},prevB:{round:'r8',idx:5}},
+    {matchIdx:3,side:'right',prevA:{round:'r8',idx:6},prevB:{round:'r8',idx:7}},
   ];
-  // R2 - semis: r4[0]w vs r4[1]w (left), r4[2]w vs r4[3]w (right)
   const r2 = [
-    {matchIdx:0, side:'left',  prevA:{round:'r4',idx:0}, prevB:{round:'r4',idx:1}},
-    {matchIdx:1, side:'right', prevA:{round:'r4',idx:2}, prevB:{round:'r4',idx:3}},
+    {matchIdx:0,side:'left', prevA:{round:'r4',idx:0},prevB:{round:'r4',idx:1}},
+    {matchIdx:1,side:'right',prevA:{round:'r4',idx:2},prevB:{round:'r4',idx:3}},
   ];
-  // R1 - final
-  const r1 = [{matchIdx:0, prevA:{round:'r2',idx:0}, prevB:{round:'r2',idx:1}}];
-  return {r8, r4, r2, r1};
+  const r1 = [{matchIdx:0,prevA:{round:'r2',idx:0},prevB:{round:'r2',idx:1}}];
+  return {r8,r4,r2,r1};
 }
 
 function resolveTeam(prev) {
@@ -1180,7 +1123,6 @@ function resolveTeam(prev) {
   return w ? teamBySlot(w) : null;
 }
 
-// ── TEAM CARD HTML ──
 function teamCard(team, slot, isAdmin, round, matchIdx, isA, result, side) {
   const isWinner = result === slot;
   const isLoser = result && result !== slot;
@@ -1197,10 +1139,8 @@ function teamCard(team, slot, isAdmin, round, matchIdx, isA, result, side) {
   return `<div class="${cls}">${logo}${seed}<span class="bk-name">${name}</span>${winBtn}</div>`;
 }
 
-// ── CONNECTOR SVG between rounds ──
 function connector(n, side) {
-  // n = number of matches in the source round
-  const c = side==='left' ? '#f0c040' : '#f0c040';
+  const c = '#f0c040';
   const w=20, unitH=110;
   const totalH = n*unitH;
   const pairs = n/2;
@@ -1224,7 +1164,6 @@ function connector(n, side) {
   return `<svg width="${w}" height="${totalH}" style="flex-shrink:0">${paths}</svg>`;
 }
 
-// ── ROUND COLUMN HTML ──
 function roundColHTML(matches, round, isAdmin, side, label) {
   const cards = matches.map(m=>{
     const result = getWinner(round, m.matchIdx);
@@ -1244,7 +1183,6 @@ function roundColHTML(matches, round, isAdmin, side, label) {
   return `<div><div class="bk-round-label">${label}</div><div class="bk-round">${cards}</div></div>`;
 }
 
-// ── MAIN RENDER ──
 function renderBracketInto(wrapId, isAdmin) {
   const wrap = document.getElementById(wrapId);
   if(!wrap) return;
@@ -1262,7 +1200,11 @@ function renderBracketInto(wrapId, isAdmin) {
     ${teamCard(tFA,sFA,isAdmin,'r1',0,true,result1,'left')}
     ${teamCard(tFB,sFB,isAdmin,'r1',0,false,result1,'right')}
   </div>`;
-  const prizeDisplay = cfg.prizeValue>0?fmtMoney(cfg.prizeValue):'🏅 TROFÉU';
+
+  // Prize display: custom text or R$ value
+  const prizeText = cfg.mode === 'free'
+    ? (cfg.freePrizeText || '🏅 TROFÉU')
+    : (cfg.mode === 'auto' ? cfg.prizeTextAuto : cfg.prizeTextManual) || (cfg.prizeValue > 0 ? fmtMoney(cfg.prizeValue) : '🏅 TROFÉU');
   const champSlot = getWinner('r1',0);
   const champ = champSlot ? teamBySlot(champSlot) : null;
 
@@ -1283,7 +1225,7 @@ function renderBracketInto(wrapId, isAdmin) {
         ${finalCard}
         <div class="bk-center">
           <div class="bk-trophy">🏆</div>
-          <div class="bk-prize"><div class="bp-label">PREMIAÇÃO</div><div class="bp-val">${prizeDisplay}</div></div>
+          <div class="bk-prize"><div class="bp-label">PREMIAÇÃO</div><div class="bp-val">${esc(prizeText)}</div></div>
         </div>
       </div>
       ${connector(1,'right')}
@@ -1312,7 +1254,6 @@ async function showPublicBracket() {
   await loadBracketResults();
   document.getElementById('bracket-nav-title').textContent = cfg.title;
   renderPublicBracket();
-  // Auto-refresh every 30s
   if(window._bracketRefresh) clearInterval(window._bracketRefresh);
   window._bracketRefresh = setInterval(async()=>{
     await loadBracketResults();
@@ -1320,7 +1261,12 @@ async function showPublicBracket() {
   }, 30000);
   activateView('view-bracket');
 }
-function openAdminModal() { document.getElementById('login-pw').value=''; openModal('modal-login'); setTimeout(()=>document.getElementById('login-pw').focus(),100); }
+
+function openAdminModal() {
+  document.getElementById('login-pw').value='';
+  openModal('modal-login');
+  setTimeout(()=>document.getElementById('login-pw').focus(),100);
+}
 
 async function doLogin() {
   const pw=document.getElementById('login-pw').value;
@@ -1342,95 +1288,116 @@ async function doLogin() {
 
 // ══════════════════════════════ ADMIN CONFIG ══════
 function populateAdminConfig() {
-  document.getElementById('cfg-title').value=cfg.title;
-  document.getElementById('cfg-hero-img').value=cfg.heroImage;
-  document.getElementById('cfg-inscription').value=cfg.inscriptionValue||'';
-  document.getElementById('cfg-prize').value=cfg.prizeValue||'';
-  document.getElementById('cfg-inscription-manual').value=cfg.inscriptionValue||'';
-  document.getElementById('cfg-prize-manual').value=cfg.prizeValue||'';
-  document.getElementById('cfg-manual-qr').value=cfg.manualQrUrl||'';
-  document.getElementById('cfg-open-time').value=cfg.openTime||'';
-  document.getElementById('cfg-close-time').value=cfg.closeTime||'';
-  document.getElementById('cfg-closed-msg').value=cfg.closedMsg||'';
+  document.getElementById('cfg-title').value = cfg.title;
+  document.getElementById('cfg-hero-img').value = cfg.heroImage;
+  document.getElementById('cfg-inscription').value = cfg.inscriptionValue || '';
+  document.getElementById('cfg-prize').value = cfg.prizeValue || '';
+  document.getElementById('cfg-inscription-manual').value = cfg.inscriptionValue || '';
+  document.getElementById('cfg-prize-manual').value = cfg.prizeValue || '';
+  document.getElementById('cfg-manual-qr').value = cfg.manualQrUrl || '';
+  document.getElementById('cfg-open-time').value = cfg.openTime || '';
+  document.getElementById('cfg-close-time').value = cfg.closeTime || '';
+  document.getElementById('cfg-closed-msg').value = cfg.closedMsg || '';
+  document.getElementById('cfg-free-prize-text').value = cfg.freePrizeText || '';
+  document.getElementById('cfg-prize-text-auto').value = cfg.prizeTextAuto || '';
+  document.getElementById('cfg-prize-text-manual').value = cfg.prizeTextManual || '';
+
+  // Apply UI states — setModeUI and setGameModeUI are safe (no null crashes)
   setModeUI(cfg.mode);
   setGameModeUI(cfg.gameMode);
-  setRegStatusUI(cfg.regOpen?'open':'closed');
+  setRegStatusUI(cfg.regOpen ? 'open' : 'closed');
   updateAdminBadge();
+  updatePrizeVisibility(); // safe call after DOM is populated
+
   if(cfg.heroImage){const p=document.getElementById('img-preview');p.src=cfg.heroImage;p.classList.add('show');}
   if(cfg.manualQrUrl){const p=document.getElementById('manual-qr-preview');p.src=cfg.manualQrUrl;p.classList.add('show');}
 }
 
-function setGameMode(m){ setGameModeUI(m); }
-function setGameModeUI(m){
-  ['normal','4x4','2v2'].forEach(x=>{
-    const el=document.getElementById('opt-'+(x==='normal'?'normal-gm':x));
-    if(el) el.className='toggle-option'+(m===x?' active-paid':'');
-  });
+// ── setMode: updates UI toggle, shows/hides paid configs, updates prize section ──
+function setMode(m) {
+  setModeUI(m);
 }
-function getSelectedGameMode(){
-  if(document.getElementById('opt-4x4')?.className.includes('active-paid')) return '4x4';
-  if(document.getElementById('opt-2v2')?.className.includes('active-paid')) return '2v2';
+
+function setModeUI(m) {
+  // Update toggle button classes
+  document.getElementById('opt-free').className = 'toggle-option' + (m === 'free' ? ' active-free' : '');
+  document.getElementById('opt-auto').className = 'toggle-option' + (m === 'auto' ? ' active-paid' : '');
+  document.getElementById('opt-manual').className = 'toggle-option' + (m === 'manual' ? ' active-paid' : '');
+
+  // Show/hide paid configs
+  document.getElementById('paid-auto-config').style.display = m === 'auto' ? 'block' : 'none';
+  document.getElementById('paid-manual-config').style.display = m === 'manual' ? 'block' : 'none';
+
+  // Update free prize section visibility
+  updatePrizeVisibility();
+}
+
+function getSelectedMode() {
+  if (document.getElementById('opt-auto')?.className.includes('active-paid')) return 'auto';
+  if (document.getElementById('opt-manual')?.className.includes('active-paid')) return 'manual';
+  return 'free';
+}
+
+function setGameMode(m) { setGameModeUI(m); }
+
+function setGameModeUI(m) {
+  ['normal','4x4','2v2'].forEach(x => {
+    const id = x === 'normal' ? 'opt-normal-gm' : `opt-${x}`;
+    const el = document.getElementById(id);
+    if (el) el.className = 'toggle-option' + (m === x ? ' active-paid' : '');
+  });
+  // Update free prize section (only shows for 4x4/2v2 + free mode)
+  updatePrizeVisibility();
+}
+
+function getSelectedGameMode() {
+  if (document.getElementById('opt-4x4')?.className.includes('active-paid')) return '4x4';
+  if (document.getElementById('opt-2v2')?.className.includes('active-paid')) return '2v2';
   return 'normal';
 }
 
-function applyGameModeToForm(){
+// ── updatePrizeVisibility: shows/hides the free prize text section ──
+// Only visible when: gameMode is 4x4 or 2v2 AND payment mode is free
+function updatePrizeVisibility() {
+  const freePrizeSection = document.getElementById('free-prize-section');
+  if (!freePrizeSection) return; // safe guard
+  const gameMode = getSelectedGameMode();
+  const paymentMode = getSelectedMode();
+  const isBracket = gameMode === '4x4' || gameMode === '2v2';
+  freePrizeSection.style.display = (isBracket && paymentMode === 'free') ? 'block' : 'none';
+}
+
+function setRegStatus(s) { setRegStatusUI(s); }
+function setRegStatusUI(s) {
+  document.getElementById('opt-open').className = 'toggle-option' + (s === 'open' ? ' active-open' : '');
+  document.getElementById('opt-closed').className = 'toggle-option' + (s === 'closed' ? ' active-closed' : '');
+}
+
+function updateAdminBadge() {
+  const b = document.getElementById('admin-status-badge');
+  if(!b) return;
+  b.className = cfg.regOpen ? 'status-badge-open' : 'status-badge-closed';
+  b.textContent = cfg.regOpen ? '● ABERTO' : '● FECHADO';
+}
+
+function applyGameModeToForm() {
   const gm = cfg.gameMode;
-  const isBracket = gm==='4x4'||gm==='2v2';
-  const is2v2 = gm==='2v2';
-  // Show/hide m3 and m4 fields for 2v2
-  const m3field = document.getElementById('f-m3')?.closest('.field');
-  const m4field = document.getElementById('f-m4')?.closest('.field');
-  if(m3field) m3field.style.display = is2v2?'none':'';
-  if(m4field) m4field.style.display = is2v2?'none':'';
-  // Update member labels
-  const lbl1 = document.querySelector('label[for="f-m1"]') || document.getElementById('f-m1')?.previousElementSibling;
-  const lbl2 = document.querySelector('label[for="f-m2"]') || document.getElementById('f-m2')?.previousElementSibling;
-  // Update slot grid label
+  const isBracket = gm === '4x4' || gm === '2v2';
+  const is2v2 = gm === '2v2';
+  const m3field = document.getElementById('field-m3');
+  const m4field = document.getElementById('field-m4');
+  if(m3field) m3field.style.display = is2v2 ? 'none' : '';
+  if(m4field) m4field.style.display = is2v2 ? 'none' : '';
   const slotDesc = document.getElementById('slots-desc');
   if(slotDesc) slotDesc.textContent = isBracket
     ? 'Escolha seu número de chaveamento. Ímpares = lado esquerdo, pares = lado direito.'
     : 'Selecione um slot disponível. Slots ocupados não podem ser escolhidos.';
-  // Update hero subtitle
-  const sub = document.querySelector('#reg-hero-title + .sub');
-  if(sub) sub.textContent = gm==='4x4'?'4x4 — CHAVEAMENTO DE 16': gm==='2v2'?'2v2 — CHAVEAMENTO DE 16':'INSCRIÇÃO DE EQUIPES';
-  // Show/hide bracket public view after registration
+  const sub = document.getElementById('reg-hero-sub');
+  if(sub) sub.textContent = gm === '4x4' ? '4x4 — CHAVEAMENTO DE 16' : gm === '2v2' ? '2v2 — CHAVEAMENTO DE 16' : 'INSCRIÇÃO DE EQUIPES';
   renderSlotsReg();
 }
-function setModeUI(m){
-  document.getElementById('opt-free').className='toggle-option'+(m==='free'?' active-free':'');
-  document.getElementById('opt-auto').className='toggle-option'+(m==='auto'?' active-paid':'');
-  document.getElementById('opt-manual').className='toggle-option'+(m==='manual'?' active-paid':'');
-  document.getElementById('opt-4x4').className='toggle-option'+(m==='4x4'?' active-paid':'');
-  document.getElementById('opt-2v2').className='toggle-option'+(m==='2v2'?' active-paid':'');
-  document.getElementById('paid-auto-config').style.display=m==='auto'?'block':'none';
-  document.getElementById('paid-manual-config').style.display=m==='manual'?'block':'none';
-  document.getElementById('gamemode-4x4-config').style.display=(m==='4x4'||m==='2v2')?'none':'none'; // no extra config needed
-}
 
-function getSelectedMode() {
-  const opts = ['free','auto','manual','4x4','2v2'];
-  for (const o of opts) {
-    const el = document.getElementById('opt-'+o);
-    if (el && (el.className.includes('active-free')||el.className.includes('active-paid'))) return o;
-  }
-  return 'free';
-}
-
-// Apenas atualiza UI — cfg só muda ao SALVAR
-function setRegStatus(s){ setRegStatusUI(s); }
-function setRegStatusUI(s){
-  document.getElementById('opt-open').className='toggle-option'+(s==='open'?' active-open':'');
-  document.getElementById('opt-closed').className='toggle-option'+(s==='closed'?' active-closed':'');
-}
-
-function updateAdminBadge(){
-  const b=document.getElementById('admin-status-badge');
-  if(!b)return;
-  b.className=cfg.regOpen?'status-badge-open':'status-badge-closed';
-  b.textContent=cfg.regOpen?'● ABERTO':'● FECHADO';
-}
-
-// ══════════════════════════════ LOGO PNG ══════
+// ── LOGO ──
 let logoTargetId = null;
 
 function openLogoModal(teamId) {
@@ -1465,60 +1432,79 @@ async function saveLogo() {
   showLoading(false); logoTargetId=null;
 }
 
-function previewHeroImage(){
-  const url=document.getElementById('cfg-hero-img').value.trim();
-  const p=document.getElementById('img-preview');
+function previewHeroImage() {
+  const url = document.getElementById('cfg-hero-img').value.trim();
+  const p = document.getElementById('img-preview');
   if(url){p.src=url;p.classList.add('show');}else{p.classList.remove('show');}
 }
 
-function previewManualQR(){
-  const url=document.getElementById('cfg-manual-qr').value.trim();
-  const p=document.getElementById('manual-qr-preview');
+function previewManualQR() {
+  const url = document.getElementById('cfg-manual-qr').value.trim();
+  const p = document.getElementById('manual-qr-preview');
   if(url){p.src=url;p.classList.add('show');}else{p.classList.remove('show');}
 }
 
-async function saveAllConfig(){
-  const title=document.getElementById('cfg-title').value.trim().toUpperCase();
-  const heroImg=document.getElementById('cfg-hero-img').value.trim();
-  const manualQr=document.getElementById('cfg-manual-qr').value.trim();
+// ══════════════════════════════ SAVE CONFIG ══════
+async function saveAllConfig() {
+  const title = document.getElementById('cfg-title').value.trim().toUpperCase();
+  const heroImg = document.getElementById('cfg-hero-img').value.trim();
+  const manualQr = document.getElementById('cfg-manual-qr').value.trim();
   const selectedMode = getSelectedMode();
   const selectedGameMode = getSelectedGameMode();
-  const inscVal=selectedMode==='manual'
+  const freePrizeText = document.getElementById('cfg-free-prize-text').value.trim();
+  const prizeTextAuto = document.getElementById('cfg-prize-text-auto').value.trim();
+  const prizeTextManual = document.getElementById('cfg-prize-text-manual').value.trim();
+
+  const inscVal = selectedMode === 'manual'
     ? parseFloat(document.getElementById('cfg-inscription-manual').value)||0
     : parseFloat(document.getElementById('cfg-inscription').value)||0;
-  const prizeVal=selectedMode==='manual'
+  const prizeVal = selectedMode === 'manual'
     ? parseFloat(document.getElementById('cfg-prize-manual').value)||0
     : parseFloat(document.getElementById('cfg-prize').value)||0;
+
   if(!title) return toast('Informe o título.',true);
   showLoading(true);
   try {
+    const upsert = (key, value) =>
+      db(`config?key=eq.${key}`,'PATCH',{value},{Prefer:''}).catch(()=>
+        db('config','POST',{key,value})
+      );
+
     await Promise.all([
       db('config?key=eq.title','PATCH',{value:title},{Prefer:''}),
       db('config?key=eq.hero_image','PATCH',{value:heroImg},{Prefer:''}),
       db('config?key=eq.mode','PATCH',{value:selectedMode},{Prefer:''}),
-      db('config?key=eq.game_mode','PATCH',{value:selectedGameMode},{Prefer:''}).catch(()=>
-        db('config','POST',{key:'game_mode',value:selectedGameMode})
-      ),
+      upsert('game_mode', selectedGameMode),
       db('config?key=eq.inscription_value','PATCH',{value:String(inscVal)},{Prefer:''}),
       db('config?key=eq.prize_value','PATCH',{value:String(prizeVal)},{Prefer:''}),
-      db('config?key=eq.manual_qr_url','PATCH',{value:manualQr},{Prefer:''}).catch(()=>
-        db('config','POST',{key:'manual_qr_url',value:manualQr})
-      )
+      upsert('manual_qr_url', manualQr),
+      upsert('free_prize_text', freePrizeText),
+      upsert('prize_text_auto', prizeTextAuto),
+      upsert('prize_text_manual', prizeTextManual),
     ]);
-    cfg.title=title; cfg.heroImage=heroImg; cfg.inscriptionValue=inscVal;
-    cfg.prizeValue=prizeVal; cfg.manualQrUrl=manualQr; cfg.mode=selectedMode; cfg.gameMode=selectedGameMode;
+
+    cfg.title = title;
+    cfg.heroImage = heroImg;
+    cfg.inscriptionValue = inscVal;
+    cfg.prizeValue = prizeVal;
+    cfg.manualQrUrl = manualQr;
+    cfg.mode = selectedMode;
+    cfg.gameMode = selectedGameMode;
+    cfg.freePrizeText = freePrizeText;
+    cfg.prizeTextAuto = prizeTextAuto;
+    cfg.prizeTextManual = prizeTextManual;
+
     applyTitles(); applyHero(); updateHeroBadges(); applyGameModeToForm();
-    document.getElementById('admin-nav-title').textContent=cfg.title;
+    document.getElementById('admin-nav-title').textContent = cfg.title;
     toast('✅ Configurações salvas!');
-  } catch(e){toast('Erro: '+e.message,true);}
+  } catch(e) { toast('Erro: '+e.message, true); }
   showLoading(false);
 }
 
-async function saveRegControl(){
-  const openTime=document.getElementById('cfg-open-time').value;
-  const closeTime=document.getElementById('cfg-close-time').value;
-  const closedMsg=document.getElementById('cfg-closed-msg').value.trim()||cfg.closedMsg;
-  // Read from UI, not from cfg
+async function saveRegControl() {
+  const openTime = document.getElementById('cfg-open-time').value;
+  const closeTime = document.getElementById('cfg-close-time').value;
+  const closedMsg = document.getElementById('cfg-closed-msg').value.trim() || cfg.closedMsg;
   const isOpen = document.getElementById('opt-open').className.includes('active-open');
   showLoading(true);
   try {
@@ -1531,29 +1517,28 @@ async function saveRegControl(){
     cfg.regOpen=isOpen; cfg.openTime=openTime||''; cfg.closeTime=closeTime||''; cfg.closedMsg=closedMsg;
     updateAdminBadge();
     toast('✅ Controle de inscrições salvo!');
-  } catch(e){toast('Erro: '+e.message,true);}
+  } catch(e) { toast('Erro: '+e.message, true); }
   showLoading(false);
 }
 
 // ══════════════════════════════ ADMIN VIEW RENDER ══════
-function renderAdminView(){
+function renderAdminView() {
   applyTitles();
-  const isBracket = cfg.gameMode==='4x4'||cfg.gameMode==='2v2';
+  const isBracket = cfg.gameMode === '4x4' || cfg.gameMode === '2v2';
   const maxSlots = totalSlots();
-  const pend=payments.filter(p=>p.status==='pending');
-  document.getElementById('stat-teams').textContent=teams.length;
-  document.getElementById('stat-slots').textContent=maxSlots-teams.length-pend.length;
-  const total=teams.reduce((a,t)=>a+(t.members||[]).length+(t.reserves||[]).length,0);
-  document.getElementById('stat-members').textContent=total;
-  document.getElementById('stat-revenue').textContent=(cfg.mode==='auto'||cfg.mode==='manual')?fmtMoney(teams.length*cfg.inscriptionValue):'—';
+  const pend = payments.filter(p=>p.status==='pending');
+  document.getElementById('stat-teams').textContent = teams.length;
+  document.getElementById('stat-slots').textContent = maxSlots - teams.length - pend.length;
+  const total = teams.reduce((a,t)=>a+(t.members||[]).length+(t.reserves||[]).length, 0);
+  document.getElementById('stat-members').textContent = total;
+  document.getElementById('stat-revenue').textContent = (cfg.mode==='auto'||cfg.mode==='manual') ? fmtMoney(teams.length*cfg.inscriptionValue) : '—';
 
-  // Show/hide bracket button
   const bracketBtn = document.getElementById('btn-bracket');
   if(bracketBtn) bracketBtn.style.display = isBracket ? 'block' : 'none';
 
   // Slot map
-  const map=document.getElementById('slots-admin-map'); map.innerHTML='';
-  for(let i=1;i<=maxSlots;i++){
+  const map = document.getElementById('slots-admin-map'); map.innerHTML='';
+  for(let i=1;i<=maxSlots;i++) {
     const t=teams.find(t=>t.slot===i), p=pend.find(p=>p.slot===i);
     const div=document.createElement('div');
     div.className='slot-admin'+(t?' filled':p?' pending-slot':'');
@@ -1563,8 +1548,8 @@ function renderAdminView(){
   }
 
   // Pending table
-  const pendSec=document.getElementById('pending-section');
-  if(pend.length&&(cfg.mode==='auto'||cfg.mode==='manual')){
+  const pendSec = document.getElementById('pending-section');
+  if(pend.length && (cfg.mode==='auto'||cfg.mode==='manual')) {
     pendSec.style.display='block';
     let h=`<table><thead><tr><th>SLOT</th><th>EQUIPE</th><th>LÍDER</th><th>MEMBROS</th><th>DATA</th><th></th></tr></thead><tbody>`;
     pend.forEach(p=>{
@@ -1583,7 +1568,7 @@ function renderAdminView(){
     document.getElementById('pending-table-wrap').innerHTML=h;
   } else pendSec.style.display='none';
 
-  const wrap=document.getElementById('teams-table-wrap');
+  const wrap = document.getElementById('teams-table-wrap');
   if(!teams.length){wrap.innerHTML='<div class="empty-state">Nenhuma equipe inscrita ainda.</div>';return;}
   const slotHeader = isBracket ? 'CHAVE' : 'SLOT';
   let h=`<table><thead><tr><th>${slotHeader}</th><th>EQUIPE</th><th>LÍDER</th><th>TELEFONE</th><th>MEMBROS</th><th>RESERVAS</th>${(cfg.mode==='auto'||cfg.mode==='manual')?'<th>PGTO</th>':''}<th>DATA</th><th></th></tr></thead><tbody>`;
@@ -1591,7 +1576,6 @@ function renderAdminView(){
     const mH=(t.members||[]).map(m=>`<span class="tag">${esc(m)}</span>`).join('');
     const rH=(t.reserves||[]).length?(t.reserves||[]).map(r=>`<span class="tag reserve">${esc(r)}</span>`).join(''):'<span style="color:var(--muted);font-size:12px">—</span>';
     const date=t.registered_at?new Date(t.registered_at).toLocaleString('pt-BR'):'—';
-    const phoneCell=`<td style="font-size:13px;color:var(--text)">${esc(t.phone||'—')}</td>`;
     const sideTag = isBracket ? `<span style="font-size:10px;color:var(--muted);margin-left:4px">${t.slot%2===1?'ESQ':'DIR'}</span>` : '';
     const logoThumb = t.logo_url ? `<img src="${esc(t.logo_url)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;border:1px solid var(--border)">` : '';
     const logoBtn = isBracket ? `<button class="btn sm secondary" style="padding:5px 10px;font-size:11px;margin-bottom:4px" onclick="openLogoModal(${t.id})">🖼 LOGO PNG</button><br>` : '';
@@ -1599,7 +1583,7 @@ function renderAdminView(){
       <td style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)">${String(t.slot).padStart(2,'0')}${sideTag}</td>
       <td style="font-weight:700">${logoThumb}${esc(t.name)}</td>
       <td><span class="tag leader">${esc(t.leader)}</span></td>
-      ${phoneCell}
+      <td style="font-size:13px">${esc(t.phone||'—')}</td>
       <td>${mH}</td>
       <td>${rH}</td>
       ${(cfg.mode==='auto'||cfg.mode==='manual')?'<td><span class="badge-paid">✓ PAGO</span></td>':''}
@@ -1611,39 +1595,39 @@ function renderAdminView(){
   wrap.innerHTML=h;
 }
 
-function askDelete(id){
-  const t=teams.find(t=>t.id===id);if(!t)return;
+function askDelete(id) {
+  const t=teams.find(t=>t.id===id); if(!t) return;
   deleteTargetId=id;
   document.getElementById('delete-team-name').textContent=t.name;
   openModal('modal-delete');
 }
 
-async function confirmDelete(){
-  const t=teams.find(t=>t.id===deleteTargetId);if(!t)return;
-  closeModal('modal-delete');showLoading(true);
+async function confirmDelete() {
+  const t=teams.find(t=>t.id===deleteTargetId); if(!t) return;
+  closeModal('modal-delete'); showLoading(true);
   try {
     await db(`teams?id=eq.${t.id}`,'DELETE',null,{Prefer:''});
     teams=teams.filter(x=>x.id!==deleteTargetId);
     renderAdminView(); renderSlotsReg();
     toast(`Equipe "${t.name}" removida.`);
   } catch(e){toast('Erro: '+e.message,true);}
-  showLoading(false);deleteTargetId=null;
+  showLoading(false); deleteTargetId=null;
 }
 
-async function confirmRemoveAll(){
-  closeModal('modal-remove-all');showLoading(true);
+async function confirmRemoveAll() {
+  closeModal('modal-remove-all'); showLoading(true);
   try {
     await db('teams?id=gt.0','DELETE',null,{Prefer:''});
     await db('payments?id=gt.0','DELETE',null,{Prefer:''}).catch(()=>{});
-    teams=[];payments=[];
-    renderAdminView();renderSlotsReg();
+    teams=[]; payments=[];
+    renderAdminView(); renderSlotsReg();
     toast('Todas as equipes removidas.');
   } catch(e){toast('Erro: '+e.message,true);}
   showLoading(false);
 }
 
 // ══════════════════════════════ PASSWORD ══════
-async function savePassword(){
+async function savePassword() {
   const cur=document.getElementById('pw-current').value;
   const nw=document.getElementById('pw-new').value;
   const cf=document.getElementById('pw-confirm').value;
@@ -1653,7 +1637,7 @@ async function savePassword(){
   showLoading(true);
   try {
     await db('config?key=eq.admin_password','PATCH',{value:nw},{Prefer:''});
-    cfg.adminPassword=nw;closeModal('modal-pw-bg');
+    cfg.adminPassword=nw; closeModal('modal-pw-bg');
     ['pw-current','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');
     toast('Senha alterada!');
   } catch(e){toast('Erro: '+e.message,true);}
@@ -1678,7 +1662,6 @@ function maskPhone(el) {
   else if (v.length > 0) v = `(${v}`;
   el.value = v;
 }
-
 function clearForm(){['f-team','f-leader','f-phone','f-m1','f-m2','f-m3','f-m4','f-r1','f-r2'].forEach(id=>document.getElementById(id).value='');}
 
 init();
