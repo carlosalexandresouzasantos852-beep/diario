@@ -624,11 +624,44 @@ async function init() {
     payments = paymentsData||[];
     await loadBracketResults();
     routeView();
+    startConfigPolling(); // auto-refresh config for non-admin users
   } catch(e) {
     toast('Erro ao conectar: '+e.message, true);
     goReg();
   }
   showLoading(false);
+}
+
+// ── CONFIG POLLING: re-reads DB every 15s so mode/gameMode changes propagate ──
+let _cfgPollInterval = null;
+function startConfigPolling() {
+  if (_cfgPollInterval) return;
+  _cfgPollInterval = setInterval(async () => {
+    // Don't poll while admin is logged in
+    const adminActive = document.getElementById('view-admin').classList.contains('active');
+    if (adminActive) return;
+    try {
+      const [cfgRows, teamsData] = await Promise.all([
+        db('config?select=key,value'),
+        db('teams?select=*&order=slot.asc'),
+      ]);
+      const prevMode = cfg.mode;
+      const prevGameMode = cfg.gameMode;
+      const prevRegOpen = cfg.regOpen;
+      parseConfig(cfgRows||[]);
+      teams = teamsData||[];
+      // Re-route only if something changed
+      const changed = prevMode !== cfg.mode || prevGameMode !== cfg.gameMode || prevRegOpen !== cfg.regOpen;
+      if (changed) {
+        routeView();
+      } else {
+        // Still update slots in case teams changed
+        renderSlotsReg();
+        updateHeroBadges();
+        applyGameModeToForm();
+      }
+    } catch(e) { /* silent — network may be intermittent */ }
+  }, 15000);
 }
 
 function parseConfig(rows) {
@@ -1466,18 +1499,22 @@ async function saveAllConfig() {
   if(!title) return toast('Informe o título.',true);
   showLoading(true);
   try {
+    // True upsert: POST with Prefer: resolution=merge-duplicates
+    // Works whether the row already exists or not (requires UNIQUE on 'key' column)
     const upsert = (key, value) =>
-      db(`config?key=eq.${key}`,'PATCH',{value},{Prefer:''}).catch(()=>
-        db('config','POST',{key,value})
-      );
+      fetch(`${SB_URL}/rest/v1/config`, {
+        method: 'POST',
+        headers: { ...H, 'Prefer': 'resolution=merge-duplicates,return=representation' },
+        body: JSON.stringify({ key, value })
+      }).then(r => r.ok ? r.json() : r.json().then(e => { throw new Error(e.message || r.statusText); }));
 
     await Promise.all([
-      db('config?key=eq.title','PATCH',{value:title},{Prefer:''}),
-      db('config?key=eq.hero_image','PATCH',{value:heroImg},{Prefer:''}),
-      db('config?key=eq.mode','PATCH',{value:selectedMode},{Prefer:''}),
+      upsert('title', title),
+      upsert('hero_image', heroImg),
+      upsert('mode', selectedMode),
       upsert('game_mode', selectedGameMode),
-      db('config?key=eq.inscription_value','PATCH',{value:String(inscVal)},{Prefer:''}),
-      db('config?key=eq.prize_value','PATCH',{value:String(prizeVal)},{Prefer:''}),
+      upsert('inscription_value', String(inscVal)),
+      upsert('prize_value', String(prizeVal)),
       upsert('manual_qr_url', manualQr),
       upsert('free_prize_text', freePrizeText),
       upsert('prize_text_auto', prizeTextAuto),
@@ -1509,11 +1546,18 @@ async function saveRegControl() {
   const isOpen = document.getElementById('opt-open').className.includes('active-open');
   showLoading(true);
   try {
+    const upsert = (key, value) =>
+      fetch(`${SB_URL}/rest/v1/config`, {
+        method: 'POST',
+        headers: { ...H, 'Prefer': 'resolution=merge-duplicates,return=representation' },
+        body: JSON.stringify({ key, value })
+      }).then(r => r.ok ? r.json() : r.json().then(e => { throw new Error(e.message || r.statusText); }));
+
     await Promise.all([
-      db('config?key=eq.reg_open','PATCH',{value:String(isOpen)},{Prefer:''}),
-      db('config?key=eq.reg_open_time','PATCH',{value:openTime||''},{Prefer:''}),
-      db('config?key=eq.reg_close_time','PATCH',{value:closeTime||''},{Prefer:''}),
-      db('config?key=eq.reg_closed_msg','PATCH',{value:closedMsg},{Prefer:''})
+      upsert('reg_open', String(isOpen)),
+      upsert('reg_open_time', openTime||''),
+      upsert('reg_close_time', closeTime||''),
+      upsert('reg_closed_msg', closedMsg),
     ]);
     cfg.regOpen=isOpen; cfg.openTime=openTime||''; cfg.closeTime=closeTime||''; cfg.closedMsg=closedMsg;
     updateAdminBadge();
