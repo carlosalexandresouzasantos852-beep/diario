@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XTREINO AURA</title>
-<link rel="icon" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -338,6 +337,15 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div>
   <div class="admin-body">
 
+    <!-- ══ SUPABASE SETUP NOTICE ══ -->
+    <div id="supabase-setup-notice" style="background:rgba(224,90,32,.1);border:1px solid var(--accent2);border-radius:8px;padding:20px;margin-bottom:24px;display:none">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent2);letter-spacing:2px;margin-bottom:10px">⚠ CONFIGURAÇÃO SUPABASE NECESSÁRIA</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">As linhas de configuração novas precisam ser criadas manualmente no Supabase (RLS impede inserção pelo app). Acesse o <strong style="color:var(--text)">SQL Editor</strong> do seu projeto Supabase e execute o SQL abaixo:</p>
+      <pre id="setup-sql" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:12px;color:#40c080;overflow-x:auto;white-space:pre-wrap;line-height:1.6"></pre>
+      <button onclick="copySql()" style="margin-top:12px;background:var(--accent2);color:var(--bg);border:none;border-radius:5px;padding:8px 20px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:1px">📋 COPIAR SQL</button>
+      <button onclick="document.getElementById('supabase-setup-notice').style.display='none'" style="margin-top:12px;margin-left:8px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:8px 20px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;cursor:pointer">✕ FECHAR</button>
+    </div>
+
     <!-- STATS -->
     <div class="stats-row">
       <div class="stat-box"><div class="val" id="stat-teams">0</div><div class="key">EQUIPES</div></div>
@@ -622,6 +630,7 @@ async function init() {
     parseConfig(cfgRows||[]);
     teams = teamsData||[];
     payments = paymentsData||[];
+    await ensureConfigRows(cfgRows||[]);
     await loadBracketResults();
     routeView();
     startConfigPolling(); // auto-refresh config for non-admin users
@@ -630,6 +639,35 @@ async function init() {
     goReg();
   }
   showLoading(false);
+}
+
+// ── ENSURE CONFIG ROWS: creates missing config rows (new keys added over time) ──
+// Uses INSERT with conflict handling — only needed for rows that didn't exist yet.
+// These are new keys added after initial DB setup.
+const NEW_CONFIG_KEYS = [
+  { key: 'game_mode',        def: 'normal' },
+  { key: 'free_prize_text',  def: '' },
+  { key: 'prize_text_auto',  def: '' },
+  { key: 'prize_text_manual',def: '' },
+  { key: 'manual_qr_url',    def: '' },
+];
+
+async function ensureConfigRows(existingRows) {
+  const existing = new Set(existingRows.map(r => r.key));
+  const missing = NEW_CONFIG_KEYS.filter(r => !existing.has(r.key));
+  if (!missing.length) return;
+  // Try to insert missing rows one by one — silently ignore RLS/unique errors
+  for (const row of missing) {
+    try {
+      await fetch(`${SB_URL}/rest/v1/config`, {
+        method: 'POST',
+        headers: { ...H, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ key: row.key, value: row.def })
+      });
+      // Don't throw on error — if RLS blocks INSERT, the row just won't be created
+      // Admin will need to add it manually via Supabase dashboard
+    } catch(e) { /* silent */ }
+  }
 }
 
 // ── CONFIG POLLING: re-reads DB every 15s so mode/gameMode changes propagate ──
@@ -1317,7 +1355,35 @@ async function doLogin() {
   showLoading(false);
   populateAdminConfig();
   renderAdminView();
+  checkMissingConfigRows();
   activateView('view-admin');
+}
+
+// ══════════════════════════════ SUPABASE SETUP CHECK ══════
+async function checkMissingConfigRows() {
+  try {
+    const rows = await db('config?select=key');
+    const existing = new Set((rows||[]).map(r => r.key));
+    const missing = NEW_CONFIG_KEYS.filter(r => !existing.has(r.key));
+    const notice = document.getElementById('supabase-setup-notice');
+    const sqlEl = document.getElementById('setup-sql');
+    if (!notice || !sqlEl) return;
+    if (!missing.length) { notice.style.display = 'none'; return; }
+    // Build SQL to insert missing rows
+    const inserts = missing.map(r =>
+      `INSERT INTO config (key, value) VALUES ('${r.key}', '${r.def}') ON CONFLICT (key) DO NOTHING;`
+    ).join('\n');
+    const sql = '-- Cole no SQL Editor do Supabase (https://app.supabase.com)\n-- Projeto: ddlskzfvwtaigvmthqvv\n\n' + inserts + '\n\n-- Após rodar, salve as configurações no painel admin novamente.';
+    sqlEl.textContent = sql;
+    notice.style.display = 'block';
+  } catch(e) { /* silent */ }
+}
+
+function copySql() {
+  const sql = document.getElementById('setup-sql')?.textContent || '';
+  navigator.clipboard.writeText(sql)
+    .then(() => toast('SQL copiado!'))
+    .catch(() => toast('Erro ao copiar', true));
 }
 
 // ══════════════════════════════ ADMIN CONFIG ══════
@@ -1499,26 +1565,23 @@ async function saveAllConfig() {
   if(!title) return toast('Informe o título.',true);
   showLoading(true);
   try {
-    // True upsert: POST with Prefer: resolution=merge-duplicates
-    // Works whether the row already exists or not (requires UNIQUE on 'key' column)
-    const upsert = (key, value) =>
-      fetch(`${SB_URL}/rest/v1/config`, {
-        method: 'POST',
-        headers: { ...H, 'Prefer': 'resolution=merge-duplicates,return=representation' },
-        body: JSON.stringify({ key, value })
-      }).then(r => r.ok ? r.json() : r.json().then(e => { throw new Error(e.message || r.statusText); }));
+    // PATCH-based save: uses UPDATE only (respects RLS that allows UPDATE but not INSERT)
+    // All config keys must exist as rows in the DB already.
+    // For new keys (game_mode, free_prize_text etc) we try PATCH then silently ignore if row missing.
+    const patch = (key, value) =>
+      db(`config?key=eq.${key}`, 'PATCH', {value}, {Prefer:''});
 
     await Promise.all([
-      upsert('title', title),
-      upsert('hero_image', heroImg),
-      upsert('mode', selectedMode),
-      upsert('game_mode', selectedGameMode),
-      upsert('inscription_value', String(inscVal)),
-      upsert('prize_value', String(prizeVal)),
-      upsert('manual_qr_url', manualQr),
-      upsert('free_prize_text', freePrizeText),
-      upsert('prize_text_auto', prizeTextAuto),
-      upsert('prize_text_manual', prizeTextManual),
+      patch('title', title),
+      patch('hero_image', heroImg),
+      patch('mode', selectedMode),
+      patch('game_mode', selectedGameMode),
+      patch('inscription_value', String(inscVal)),
+      patch('prize_value', String(prizeVal)),
+      patch('manual_qr_url', manualQr),
+      patch('free_prize_text', freePrizeText),
+      patch('prize_text_auto', prizeTextAuto),
+      patch('prize_text_manual', prizeTextManual),
     ]);
 
     cfg.title = title;
@@ -1546,18 +1609,14 @@ async function saveRegControl() {
   const isOpen = document.getElementById('opt-open').className.includes('active-open');
   showLoading(true);
   try {
-    const upsert = (key, value) =>
-      fetch(`${SB_URL}/rest/v1/config`, {
-        method: 'POST',
-        headers: { ...H, 'Prefer': 'resolution=merge-duplicates,return=representation' },
-        body: JSON.stringify({ key, value })
-      }).then(r => r.ok ? r.json() : r.json().then(e => { throw new Error(e.message || r.statusText); }));
+    const patch = (key, value) =>
+      db(`config?key=eq.${key}`, 'PATCH', {value}, {Prefer:''});
 
     await Promise.all([
-      upsert('reg_open', String(isOpen)),
-      upsert('reg_open_time', openTime||''),
-      upsert('reg_close_time', closeTime||''),
-      upsert('reg_closed_msg', closedMsg),
+      patch('reg_open', String(isOpen)),
+      patch('reg_open_time', openTime||''),
+      patch('reg_close_time', closeTime||''),
+      patch('reg_closed_msg', closedMsg),
     ]);
     cfg.regOpen=isOpen; cfg.openTime=openTime||''; cfg.closeTime=closeTime||''; cfg.closedMsg=closedMsg;
     updateAdminBadge();
