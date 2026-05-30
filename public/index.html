@@ -207,17 +207,80 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .bk-round-label{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:6px;}
 
 /* ═════════ FULLSCREEN BRACKET ═════════ */
-.bracket-fullscreen{width:100vw;height:100vh;background:var(--bg);position:fixed;inset:0;z-index:999;overflow:auto;}
+.bracket-fullscreen{width:100vw;min-height:100vh;background:var(--bg);position:fixed;inset:0;z-index:999;overflow:auto;}
 .bracket-modal-full{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:none;overflow:auto;}
 .bracket-modal-full.open{display:block;}
 .bracket-modal-content{width:100vw;min-height:100vh;background:var(--bg);padding:30px;}
 .bracket-close-btn{position:fixed;top:20px;right:20px;z-index:10000;background:#e04040;color:#fff;border:none;border-radius:8px;padding:12px 20px;font-weight:700;cursor:pointer;transition:.2s;}
 .bracket-close-btn:hover{transform:scale(1.05);}
-#bracket-wrap,#bracket-public-wrap{width:100%;min-width:100%;padding:30px;padding-top:100px;}
-.bk-outer{overflow:visible !important;width:100%;min-height:100vh;padding:20px;}
-.bk-field{width:100%;justify-content:center;transform:scale(1.15);transform-origin:top center;}
+
+/* ── Desktop: horizontal layout ── */
+#bracket-wrap,#bracket-public-wrap{width:100%;padding:20px;padding-top:80px;}
+.bk-outer{overflow:visible !important;width:100%;padding:20px;}
+.bk-field{width:100%;justify-content:center;transform:scale(1.1);transform-origin:top center;}
 @media(max-width:1400px){.bk-field{transform:scale(1);}}
-@media(max-width:1100px){.bk-field{transform:scale(.85);}}
+@media(max-width:1100px){.bk-field{transform:scale(.82);}}
+@media(max-width:900px){.bk-field{transform:scale(.65);transform-origin:top center;}}
+
+/* ── Mobile portrait: vertical stacked layout ── */
+@media(max-width:700px) and (orientation:portrait){
+  #bracket-public-wrap{padding:8px;padding-top:60px;}
+  .bk-outer{padding:8px;min-height:unset;}
+  /* Hide the horizontal flex layout, show vertical instead */
+  .bk-field{
+    display:none !important;
+  }
+  .bk-mobile-layout{
+    display:flex !important;
+    flex-direction:column;
+    gap:0;
+    align-items:center;
+    width:100%;
+  }
+}
+/* Portrait: mobile layout visible only on portrait */
+.bk-mobile-layout{display:none;}
+
+/* ── Mobile landscape: fit entire bracket on screen ── */
+@media(max-width:900px) and (orientation:landscape){
+  #bracket-public-wrap{padding:4px;padding-top:56px;}
+  .bk-outer{padding:4px;min-height:unset;}
+  .bk-field{
+    transform:scale(0.48);
+    transform-origin:top center;
+  }
+}
+
+/* ── Mobile team card: smaller ── */
+@media(max-width:700px){
+  .bk-team{min-width:110px;max-width:130px;padding:4px 7px;}
+  .bk-team .bk-name{font-size:9px;}
+  .bk-team .bk-seed{font-size:10px;}
+  .bk-team .bk-logo{width:18px;height:18px;}
+}
+
+/* ── Rotate hint ── */
+.rotate-hint{
+  display:none;
+  position:fixed;
+  bottom:16px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(129,31,221,.85);
+  color:#fff;
+  padding:8px 18px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1px;
+  z-index:9998;
+  white-space:nowrap;
+  animation:fadeInUp .4s ease;
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@media(max-width:700px) and (orientation:portrait){
+  .rotate-hint{display:block;}
+}
 </style>
 </head>
 <body>
@@ -322,6 +385,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
       <button class="nav-btn" onclick="openAdminModal()">⚙ ADMIN</button>
     </nav>
     <div id="bracket-public-wrap"></div>
+    <div class="rotate-hint">📱 Vire o celular para ver melhor ↻</div>
   </div>
 </div>
 
@@ -1280,12 +1344,17 @@ function renderBracketInto(wrapId, isAdmin) {
   const champSlot = getWinner('r1',0);
   const champ = champSlot ? teamBySlot(champSlot) : null;
 
+  // ── Mobile portrait: vertical layout with phases stacked ──
+  const mobileLayout = buildMobileLayout(r8L,r8R,r4L,r4R,r2,finalCard,prizeText,isAdmin);
+
   wrap.innerHTML=`<div class="bk-outer">
     <div class="bk-header">
       <h2>${esc(cfg.title)}</h2>
       <p>MODO ${cfg.gameMode.toUpperCase()} · CHAVEAMENTO COMPLETO</p>
       ${champ?`<div style="margin-top:8px;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--success);letter-spacing:2px">🏆 CAMPEÃO: ${esc(champ.name)}</div>`:''}
     </div>
+
+    <!-- Desktop / landscape: horizontal layout -->
     <div class="bk-field">
       ${roundColHTML(r8L,'r8',isAdmin,'left','OITAVAS')}
       ${connector(4,'left')}
@@ -1307,7 +1376,78 @@ function renderBracketInto(wrapId, isAdmin) {
       ${connector(4,'right')}
       ${roundColHTML(r8R,'r8',isAdmin,'right','OITAVAS')}
     </div>
+
+    <!-- Mobile portrait: vertical stacked layout -->
+    <div class="bk-mobile-layout">${mobileLayout}</div>
   </div>`;
+}
+
+// ── Mobile vertical layout builder ──
+// Shows: OITAVAS (all 8) → QUARTAS → SEMI → FINAL → trophy
+// Each phase is a 2-column grid (left side | right side)
+function mobileMatchCard(team, slot, isAdmin, round, matchIdx, result) {
+  const isWinner = result === slot;
+  const isLoser = result && result !== slot;
+  const isEmpty = !team;
+  const logo = team?.logo_url
+    ? `<img class="bk-logo" src="${esc(team.logo_url)}" alt="" style="width:16px;height:16px">`
+    : `<div class="bk-logo" style="width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--accent);background:var(--surface2);border-radius:50%;border:1px solid var(--border)">${slot||'?'}</div>`;
+  const seed = slot ? `<span style="font-family:'Bebas Neue',sans-serif;font-size:10px;color:var(--accent);min-width:14px">#${slot}</span>` : '';
+  const name = team ? esc(team.name) : '<span style="color:var(--muted);font-style:italic;font-size:9px">A definir</span>';
+  const winBtn = (isAdmin && team && !result)
+    ? `<button class="bk-win-btn" style="font-size:8px;padding:1px 4px" onclick="setWinner('${round}',${matchIdx},${slot})">✓</button>`
+    : '';
+  const cls = `bk-team${isEmpty?' empty':''}${isWinner?' winner':''}${isLoser?' loser':''}`;
+  return `<div class="${cls}" style="min-width:0;max-width:100%;padding:4px 6px;font-size:9px">${logo}${seed}<span class="bk-name" style="font-size:9px">${name}</span>${winBtn}</div>`;
+}
+
+function mobilePairCard(m, round, isAdmin) {
+  const result = getWinner(round, m.matchIdx);
+  let teamA, slotA, teamB, slotB;
+  if(round==='r8'){
+    slotA=m.slotA; teamA=teamBySlot(slotA);
+    slotB=m.slotB; teamB=teamBySlot(slotB);
+  } else {
+    const ta=resolveTeam(m.prevA); slotA=ta?.slot||null; teamA=ta;
+    const tb=resolveTeam(m.prevB); slotB=tb?.slot||null; teamB=tb;
+  }
+  return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px;display:flex;flex-direction:column;gap:2px">
+    ${mobileMatchCard(teamA,slotA,isAdmin,round,m.matchIdx,result)}
+    <div style="height:1px;background:var(--border);margin:1px 0"></div>
+    ${mobileMatchCard(teamB,slotB,isAdmin,round,m.matchIdx,result)}
+  </div>`;
+}
+
+function mobilePhaseHTML(leftMatches, rightMatches, round, label, isAdmin) {
+  const leftCards = leftMatches.map(m => mobilePairCard(m, round, isAdmin)).join('');
+  const rightCards = rightMatches.map(m => mobilePairCard(m, round, isAdmin)).join('');
+  return `
+    <div style="width:100%;padding:4px 0">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:var(--accent);text-align:center;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:4px">${label}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <div style="display:flex;flex-direction:column;gap:4px">${leftCards}</div>
+        <div style="display:flex;flex-direction:column;gap:4px">${rightCards}</div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:4px 0;color:var(--muted)">▼</div>`;
+}
+
+function buildMobileLayout(r8L,r8R,r4L,r4R,r2,finalCard,prizeText,isAdmin) {
+  return `
+    ${mobilePhaseHTML(r8L, r8R, 'r8', 'OITAVAS DE FINAL', isAdmin)}
+    ${mobilePhaseHTML(r4L, r4R, 'r4', 'QUARTAS DE FINAL', isAdmin)}
+    ${mobilePhaseHTML(r2.slice(0,1), r2.slice(1,2), 'r2', 'SEMIFINAIS', isAdmin)}
+    <div style="width:100%;padding:4px 0">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:var(--accent);text-align:center;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px">⚡ FINAL</div>
+      <div style="display:flex;justify-content:center">${finalCard}</div>
+    </div>
+    <div style="text-align:center;margin:12px 0">
+      <div style="font-size:36px;animation:float 3s ease-in-out infinite">🏆</div>
+      <div class="bk-prize" style="display:inline-block;margin-top:8px">
+        <div class="bp-label">PREMIAÇÃO</div>
+        <div class="bp-val">${esc(prizeText)}</div>
+      </div>
+    </div>`;
 }
 
 function renderBracket() { renderBracketInto('bracket-wrap', false); }
