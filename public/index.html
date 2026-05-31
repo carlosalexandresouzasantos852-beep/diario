@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XTREINO AURA</title>
-<link rel="icon" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -759,9 +758,15 @@ function startConfigPolling() {
         routeView();
       } else {
         // Still update slots in case teams changed
-        renderSlotsReg();
-        updateHeroBadges();
-        applyGameModeToForm();
+        const isBracketView = document.getElementById('view-bracket').classList.contains('active');
+        if (isBracketView) {
+          await loadBracketResults();
+          renderPublicBracket();
+        } else {
+          renderSlotsReg();
+          updateHeroBadges();
+          applyGameModeToForm();
+        }
       }
     } catch(e) { /* silent — network may be intermittent */ }
   }, 15000);
@@ -1203,7 +1208,15 @@ const R8_RIGHT = [[2,4],[6,8],[10,12],[14,16]];
 
 async function loadBracketResults() {
   try {
-    const rows = await db('bracket_results?select=round,match_index,winner_slot&order=round.asc,match_index.asc').catch(()=>[]);
+    const res = await fetch(`${SB_URL}/rest/v1/bracket_results?select=round,match_index,winner_slot&order=round.asc,match_index.asc`, {
+      headers: H
+    });
+    if (!res.ok) {
+      // Table doesn't exist yet — show setup notice on next admin login
+      bracketResults = {};
+      return;
+    }
+    const rows = await res.json();
     bracketResults = {};
     (rows||[]).forEach(r => {
       if (!bracketResults[r.round]) bracketResults[r.round]={};
@@ -1212,21 +1225,81 @@ async function loadBracketResults() {
   } catch(e) { bracketResults = {}; }
 }
 
+// Reload teams from DB (ensures logo_url and other fields are fresh)
+async function reloadTeams() {
+  try {
+    const fresh = await db('teams?select=*&order=slot.asc');
+    if (fresh) teams = fresh;
+  } catch(e) {}
+}
+
 async function setWinner(round, matchIndex, winnerSlot) {
   showLoading(true);
   try {
-    await fetch(`${SB_URL}/rest/v1/bracket_results`, {
+    const res = await fetch(`${SB_URL}/rest/v1/bracket_results`, {
       method:'POST',
-      headers:{...H,'Prefer':'resolution=merge-duplicates'},
+      headers:{...H,'Prefer':'resolution=merge-duplicates,return=representation'},
       body:JSON.stringify({round, match_index:matchIndex, winner_slot:winnerSlot, updated_at:new Date().toISOString()})
     });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({message:res.statusText}));
+      // Table may not exist or RLS blocking — show SQL setup notice
+      if (res.status === 404 || res.status === 400 || res.status === 403 || res.status === 42) {
+        showBracketTableNotice();
+      }
+      throw new Error(err.message || res.statusText);
+    }
     if (!bracketResults[round]) bracketResults[round]={};
     bracketResults[round][matchIndex] = winnerSlot;
     renderBracketAdmin();
     renderPublicBracket();
     toast('✅ Vitória registrada!');
-  } catch(e){toast('Erro: '+e.message,true);}
+  } catch(e){toast('Erro ao salvar: '+e.message,true);}
   showLoading(false);
+}
+
+function showBracketTableNotice() {
+  // Show SQL notice in admin panel
+  const notice = document.getElementById('supabase-setup-notice');
+  const sqlEl = document.getElementById('setup-sql');
+  if (!notice || !sqlEl) return;
+  const sql = `-- Cole no SQL Editor do Supabase para criar a tabela bracket_results
+-- https://app.supabase.com → projeto ddlskzfvwtaigvmthqvv → SQL Editor
+
+CREATE TABLE IF NOT EXISTS bracket_results (
+  id bigint generated always as identity primary key,
+  round text not null,
+  match_index integer not null,
+  winner_slot integer not null,
+  updated_at timestamptz default now(),
+  UNIQUE(round, match_index)
+);
+
+-- Permitir leitura e escrita pela chave anon
+ALTER TABLE bracket_results ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "allow_all_bracket" ON bracket_results
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Também garantir colunas novas na tabela teams
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS logo_url text;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS phone text;
+
+-- Garantir linhas de config necessárias
+INSERT INTO config (key, value) VALUES
+  ('game_mode',         'normal'),
+  ('free_prize_text',   ''),
+  ('prize_text_auto',   ''),
+  ('prize_text_manual', ''),
+  ('manual_qr_url',     '')
+ON CONFLICT (key) DO NOTHING;
+
+-- Permitir INSERT na config pela chave anon (para futuras chaves novas)
+CREATE POLICY "allow_insert_config" ON config
+  FOR INSERT WITH CHECK (true);`;
+  sqlEl.textContent = sql;
+  notice.style.display = 'block';
+  notice.scrollIntoView({behavior:'smooth'});
 }
 
 function getWinner(round, matchIdx) { return bracketResults[round]?.[matchIdx] || null; }
@@ -1457,14 +1530,14 @@ function renderPublicBracket() { renderBracketInto('bracket-public-wrap', false)
 
 async function openBracket() {
   showLoading(true);
-  await loadBracketResults();
+  await Promise.all([reloadTeams(), loadBracketResults()]);
   showLoading(false);
   renderBracketAdmin();
   openModal('modal-bracket');
 }
 
 async function showPublicBracket() {
-  await loadBracketResults();
+  await Promise.all([reloadTeams(), loadBracketResults()]);
   document.getElementById('bracket-nav-title').textContent = cfg.title;
   renderPublicBracket();
   if(window._bracketRefresh) clearInterval(window._bracketRefresh);
@@ -1503,18 +1576,61 @@ async function doLogin() {
 // ══════════════════════════════ SUPABASE SETUP CHECK ══════
 async function checkMissingConfigRows() {
   try {
+    // Check config rows
     const rows = await db('config?select=key');
     const existing = new Set((rows||[]).map(r => r.key));
-    const missing = NEW_CONFIG_KEYS.filter(r => !existing.has(r.key));
+    const missingConfig = NEW_CONFIG_KEYS.filter(r => !existing.has(r.key));
+
+    // Check bracket_results table exists by trying to read it
+    let bracketTableMissing = false;
+    try {
+      await db('bracket_results?select=id&limit=1');
+    } catch(e) {
+      bracketTableMissing = true;
+    }
+
     const notice = document.getElementById('supabase-setup-notice');
     const sqlEl = document.getElementById('setup-sql');
     if (!notice || !sqlEl) return;
-    if (!missing.length) { notice.style.display = 'none'; return; }
-    // Build SQL to insert missing rows
-    const inserts = missing.map(r =>
-      `INSERT INTO config (key, value) VALUES ('${r.key}', '${r.def}') ON CONFLICT (key) DO NOTHING;`
-    ).join('\n');
-    const sql = '-- Cole no SQL Editor do Supabase (https://app.supabase.com)\n-- Projeto: ddlskzfvwtaigvmthqvv\n\n' + inserts + '\n\n-- Após rodar, salve as configurações no painel admin novamente.';
+
+    if (!missingConfig.length && !bracketTableMissing) {
+      notice.style.display = 'none';
+      return;
+    }
+
+    // Build full SQL
+    let sql = '-- Cole no SQL Editor do Supabase\n-- https://app.supabase.com → SQL Editor → projeto ddlskzfvwtaigvmthqvv\n\n';
+
+    if (bracketTableMissing) {
+      sql += `-- TABELA NECESSÁRIA: bracket_results (armazena resultados do chaveamento)
+CREATE TABLE IF NOT EXISTS bracket_results (
+  id bigint generated always as identity primary key,
+  round text not null,
+  match_index integer not null,
+  winner_slot integer not null,
+  updated_at timestamptz default now(),
+  UNIQUE(round, match_index)
+);
+ALTER TABLE bracket_results ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "allow_all_bracket" ON bracket_results
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Coluna logo_url na tabela teams (se não existir)
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS logo_url text;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS phone text;
+
+`;
+    }
+
+    if (missingConfig.length) {
+      sql += '-- LINHAS DE CONFIG FALTANDO:\n';
+      sql += missingConfig.map(r =>
+        `INSERT INTO config (key, value) VALUES ('${r.key}', '${r.def}') ON CONFLICT (key) DO NOTHING;`
+      ).join('\n');
+      sql += '\n\n-- Política para INSERT na config:\nCREATE POLICY IF NOT EXISTS "allow_insert_config" ON config FOR INSERT WITH CHECK (true);\n';
+    }
+
+    sql += '\n-- Após rodar, recarregue a página e salve as configurações no painel admin.';
     sqlEl.textContent = sql;
     notice.style.display = 'block';
   } catch(e) { /* silent */ }
@@ -1664,12 +1780,26 @@ async function saveLogo() {
   if(!logoTargetId) return;
   showLoading(true);
   try {
-    await db(`teams?id=eq.${logoTargetId}`,'PATCH',{logo_url:url},{Prefer:''});
-    teams = teams.map(t=>t.id===logoTargetId?{...t,logo_url:url}:t);
+    const res = await fetch(`${SB_URL}/rest/v1/teams?id=eq.${logoTargetId}`, {
+      method: 'PATCH',
+      headers: {...H, 'Prefer': 'return=representation'},
+      body: JSON.stringify({logo_url: url})
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({message:res.statusText}));
+      // If column doesn't exist, show setup notice
+      if (err.message && err.message.includes('logo_url')) {
+        showBracketTableNotice();
+      }
+      throw new Error(err.message || res.statusText);
+    }
+    // Update local state immediately
+    teams = teams.map(t => t.id===logoTargetId ? {...t, logo_url: url} : t);
     closeModal('modal-logo');
     renderAdminView();
-    toast('Logo salva!');
-  } catch(e) { toast('Erro: '+e.message,true); }
+    renderBracketAdmin();
+    toast('✅ Logo salva!');
+  } catch(e) { toast('Erro ao salvar logo: '+e.message, true); }
   showLoading(false); logoTargetId=null;
 }
 
